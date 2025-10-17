@@ -1,24 +1,5 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
-import dynamic from 'next/dynamic';
-import '@blocknote/core/fonts/inter.css';
-import '@blocknote/react/style.css';
-
-// Dynamically import the entire editor to avoid SSR issues
-const BlockNoteEditor = dynamic(
-  () => import('./BlockNoteEditor'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="p-6 max-w-4xl">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded mb-4"></div>
-          <div className="h-96 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-    )
-  }
-);
+import { useEffect, useState } from 'react';
 
 export default function Editor({ pageId }: { pageId: string | null }) {
   const [title, setTitle] = useState<string>('');
@@ -90,10 +71,29 @@ export default function Editor({ pageId }: { pageId: string | null }) {
           />
         )}
         
-        {/* BlockNote Editor */}
+        {/* Simple Text Editor */}
         <div className="border rounded-lg overflow-hidden">
           {pageId ? (
-            <BlockNoteEditor pageId={pageId} />
+            <div className="p-4">
+              <textarea
+                placeholder="Start writing..."
+                className="w-full h-96 border-none outline-none resize-none"
+                onChange={async (e) => {
+                  const content = e.target.value;
+                  try {
+                    await fetch(`/api/pages/${pageId}`, {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ 
+                        contentJson: { content }
+                      }),
+                    });
+                  } catch (error) {
+                    console.error('Error saving content:', error);
+                  }
+                }}
+              />
+            </div>
           ) : (
             <div className="p-8 text-center text-gray-500">
               <p className="text-lg">Create your first page to start writing...</p>

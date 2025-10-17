@@ -1,67 +1,161 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { BlockNoteViewEditor, FormattingToolbar, useCreateBlockNote } from '@blocknote/react';
+import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
+import '@blocknote/core/fonts/inter.css';
+import '@blocknote/react/style.css';
+
+// Create a custom schema with all default blocks
+const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+  },
+});
 
 export default function Editor({ pageId }: { pageId: string | null }) {
-  const [content, setContent] = useState<string>('');
   const [title, setTitle] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(()=>{
-    if(!pageId) return;
-    (async()=>{
-      const r = await fetch('/api/pages/'+pageId);
-      if(r.ok){ 
-        const p = await r.json(); 
-        setContent(p.contentJson?.content || ''); 
-        setTitle(p.title || '');
+  // Create the BlockNote editor instance
+  const editor = useCreateBlockNote({
+    schema,
+    initialContent: [
+      {
+        type: "paragraph",
+        content: "Start writing...",
+      },
+    ],
+  });
+
+  // Load page data when pageId changes
+  useEffect(() => {
+    if (!pageId) {
+      setIsLoading(false);
+      return;
+    }
+
+    const loadPage = async () => {
+      try {
+        const response = await fetch(`/api/pages/${pageId}`);
+        if (response.ok) {
+          const page = await response.json();
+          setTitle(page.title || '');
+          
+          // Convert content to BlockNote format
+          if (page.contentJson?.content) {
+            try {
+              const blocks = typeof page.contentJson.content === 'string' 
+                ? JSON.parse(page.contentJson.content)
+                : page.contentJson.content;
+              editor.replaceBlocks(editor.document, blocks);
+            } catch (error) {
+              console.error('Error parsing content:', error);
+              // Fallback to simple text
+              editor.replaceBlocks(editor.document, [
+                {
+                  type: "paragraph",
+                  content: page.contentJson.content,
+                },
+              ]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading page:', error);
+      } finally {
+        setIsLoading(false);
       }
-    })();
-  },[pageId]);
+    };
 
-  async function onContentChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    if(!pageId) return;
-    const newContent = e.target.value;
-    setContent(newContent);
-    await fetch('/api/pages/'+pageId, {
-      method: 'PATCH',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ contentJson: { content: newContent } })
-    });
-  }
+    loadPage();
+  }, [pageId, editor]);
 
-  async function onTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if(!pageId) return;
+  // Handle content changes with debouncing
+  const handleContentChange = useCallback(async () => {
+    if (!pageId) return;
+
+    try {
+      const blocks = editor.document;
+      await fetch(`/api/pages/${pageId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          contentJson: { content: JSON.stringify(blocks) }
+        }),
+      });
+    } catch (error) {
+      console.error('Error saving content:', error);
+    }
+  }, [pageId, editor]);
+
+  // Handle title changes
+  const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!pageId) return;
     const newTitle = e.target.value;
     setTitle(newTitle);
-    await fetch('/api/pages/'+pageId, {
-      method: 'PATCH',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ title: newTitle })
-    });
+    
+    try {
+      await fetch(`/api/pages/${pageId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTitle }),
+      });
+    } catch (error) {
+      console.error('Error saving title:', error);
+    }
+  };
+
+  // Debounced content saving
+  useEffect(() => {
+    if (!pageId || isLoading) return;
+
+    const timeoutId = setTimeout(() => {
+      handleContentChange();
+    }, 1000); // Save after 1 second of inactivity
+
+    return () => clearTimeout(timeoutId);
+  }, [editor.document, pageId, isLoading, handleContentChange]);
+
+  if (isLoading) {
+    return (
+      <div className="p-6 max-w-4xl">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded mb-4"></div>
+          <div className="h-96 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="p-6 max-w-4xl">
-      <div className="text-sm font-medium mb-2">Simple Text Editor (BlockNote integration coming soon)</div>
-      <div className="border rounded">
-        {pageId ? (
-          <div className="p-4 space-y-4">
-            <input
-              type="text"
-              value={title}
-              onChange={onTitleChange}
-              placeholder="Page title..."
-              className="w-full text-2xl font-bold border-none outline-none bg-transparent"
-            />
-            <textarea
-              value={content}
-              onChange={onContentChange}
-              placeholder="Start writing..."
-              className="w-full h-96 border-none outline-none resize-none bg-transparent"
-            />
-          </div>
-        ) : (
-          <p className="p-4 opacity-70">Create your first page…</p>
+      <div className="space-y-4">
+        {/* Title Input */}
+        {pageId && (
+          <input
+            type="text"
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="Untitled"
+            className="w-full text-3xl font-bold border-none outline-none bg-transparent placeholder-gray-400"
+          />
         )}
+        
+        {/* BlockNote Editor */}
+        <div className="border rounded-lg overflow-hidden">
+          {pageId ? (
+            <BlockNoteViewEditor 
+              editor={editor}
+              className="min-h-[400px]"
+            >
+              <FormattingToolbar />
+            </BlockNoteViewEditor>
+          ) : (
+            <div className="p-8 text-center text-gray-500">
+              <p className="text-lg">Create your first page to start writing...</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

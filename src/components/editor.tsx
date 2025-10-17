@@ -1,35 +1,50 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
-import { BlockNoteViewEditor, FormattingToolbar, useCreateBlockNote } from '@blocknote/react';
-import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
+import dynamic from 'next/dynamic';
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/react/style.css';
 
-// Create a custom schema with all default blocks
-const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-  },
-});
+// Dynamically import BlockNote components to avoid SSR issues
+const BlockNoteViewEditor = dynamic(
+  () => import('@blocknote/react').then((mod) => mod.BlockNoteViewEditor),
+  { ssr: false }
+);
+
+const FormattingToolbar = dynamic(
+  () => import('@blocknote/react').then((mod) => mod.FormattingToolbar),
+  { ssr: false }
+);
+
+const useCreateBlockNote = dynamic(
+  () => import('@blocknote/react').then((mod) => mod.useCreateBlockNote),
+  { ssr: false }
+);
 
 export default function Editor({ pageId }: { pageId: string | null }) {
   const [title, setTitle] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
+  const [editor, setEditor] = useState<any>(null);
 
-  // Create the BlockNote editor instance
-  const editor = useCreateBlockNote({
-    schema,
-    initialContent: [
-      {
-        type: "paragraph",
-        content: "Start writing...",
-      },
-    ],
-  });
+  // Create the BlockNote editor instance only on client side
+  useEffect(() => {
+    const createEditor = async () => {
+      const { useCreateBlockNote: createBlockNote } = await import('@blocknote/react');
+      const editorInstance = createBlockNote({
+        initialContent: [
+          {
+            type: "paragraph",
+            content: "Start writing...",
+          },
+        ],
+      });
+      setEditor(editorInstance);
+    };
+    createEditor();
+  }, []);
 
   // Load page data when pageId changes
   useEffect(() => {
-    if (!pageId) {
+    if (!pageId || !editor) {
       setIsLoading(false);
       return;
     }
@@ -72,7 +87,7 @@ export default function Editor({ pageId }: { pageId: string | null }) {
 
   // Handle content changes with debouncing
   const handleContentChange = useCallback(async () => {
-    if (!pageId) return;
+    if (!pageId || !editor) return;
 
     try {
       const blocks = editor.document;
@@ -107,14 +122,14 @@ export default function Editor({ pageId }: { pageId: string | null }) {
 
   // Debounced content saving
   useEffect(() => {
-    if (!pageId || isLoading) return;
+    if (!pageId || isLoading || !editor) return;
 
     const timeoutId = setTimeout(() => {
       handleContentChange();
     }, 1000); // Save after 1 second of inactivity
 
     return () => clearTimeout(timeoutId);
-  }, [editor.document, pageId, isLoading, handleContentChange]);
+  }, [editor?.document, pageId, isLoading, handleContentChange]);
 
   if (isLoading) {
     return (
@@ -143,7 +158,7 @@ export default function Editor({ pageId }: { pageId: string | null }) {
         
         {/* BlockNote Editor */}
         <div className="border rounded-lg overflow-hidden">
-          {pageId ? (
+          {pageId && editor ? (
             <BlockNoteViewEditor 
               editor={editor}
               className="min-h-[400px]"

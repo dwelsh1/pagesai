@@ -12,17 +12,16 @@ export async function middleware(req: NextRequest) {
     isAuthRoute
   });
   
-  // For testing: always redirect to login unless already on login page
-  if (req.nextUrl.pathname === '/' && !isAuthRoute) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
-  
+  // Protect API routes
   if (!token && req.nextUrl.pathname.startsWith('/api') && !isAuthRoute) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  
+  // Redirect to login if no token and trying to access protected routes
   if (!token && req.nextUrl.pathname === '/') {
     return NextResponse.redirect(new URL('/login', req.url));
   }
+  
   return NextResponse.next();
 }
 

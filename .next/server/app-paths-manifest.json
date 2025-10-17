@@ -1,9 +1,3 @@
 {
-  "/api/auth/logout/route": "app/api/auth/logout/route.js",
-  "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/api/auth/clear-session/route": "app/api/auth/clear-session/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/(app)/page": "app/(app)/page.js",
-  "/(app)/pages/[id]/page": "app/(app)/pages/[id]/page.js"
+  "/(app)/page": "app/(app)/page.js"
 }

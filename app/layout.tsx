@@ -2,7 +2,13 @@ import '../styles/globals.css';
 import { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 
-export const metadata = { title: 'PagesAI', description: 'Notion-like app' };
+export const metadata = { 
+  title: 'PagesAI', 
+  description: 'Notion-like app',
+  icons: {
+    icon: '/favicon.svg',
+  },
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 export default function Editor({ pageId }: { pageId: string | null }) {
   const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
   // Load page data when pageId changes
@@ -18,6 +19,10 @@ export default function Editor({ pageId }: { pageId: string | null }) {
         if (response.ok) {
           const page = await response.json();
           setTitle(page.title || '');
+          // Load existing content
+          if (page.contentJson?.content) {
+            setContent(page.contentJson.content);
+          }
         }
       } catch (error) {
         console.error('Error loading page:', error);
@@ -77,17 +82,25 @@ export default function Editor({ pageId }: { pageId: string | null }) {
             <div className="p-4">
               <textarea
                 placeholder="Start writing..."
+                value={content}
                 className="w-full h-96 border-none outline-none resize-none"
                 onChange={async (e) => {
-                  const content = e.target.value;
+                  const newContent = e.target.value;
+                  setContent(newContent); // Update local state immediately
+                  console.log('Saving content:', newContent);
                   try {
-                    await fetch(`/api/pages/${pageId}`, {
+                    const response = await fetch(`/api/pages/${pageId}`, {
                       method: 'PATCH',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ 
-                        contentJson: { content }
+                        contentJson: { content: newContent }
                       }),
                     });
+                    if (response.ok) {
+                      console.log('Content saved successfully');
+                    } else {
+                      console.error('Failed to save content:', response.status, response.statusText);
+                    }
                   } catch (error) {
                     console.error('Error saving content:', error);
                   }

@@ -1,38 +1,8 @@
 {
-  "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> @emoji-mart/data": {
-    "id": "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> @emoji-mart/data",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_emoji-mart_data_sets_15_native_json.js"
-    ]
-  },
-  "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> emoji-mart": {
-    "id": "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> emoji-mart",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_emoji-mart_dist_module_js.js"
-    ]
-  },
-  "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> @emoji-mart/data": {
-    "id": "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> @emoji-mart/data",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_emoji-mart_data_sets_15_native_json.js"
-    ]
-  },
-  "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> emoji-mart": {
-    "id": "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> emoji-mart",
-    "files": [
-      "static/chunks/_app-pages-browser_node_modules_emoji-mart_dist_module_js.js"
-    ]
-  },
   "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts": {
     "id": "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts",
     "files": [
       "static/chunks/_app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js"
-    ]
-  },
-  "components\\editor.tsx -> ./BlockNoteEditor": {
-    "id": "components\\editor.tsx -> ./BlockNoteEditor",
-    "files": [
-      "static/chunks/_app-pages-browser_src_components_BlockNoteEditor_tsx.js"
     ]
   }
 }

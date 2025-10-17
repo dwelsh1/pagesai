@@ -580,6 +580,9 @@ video {
 .cursor-col-resize {
   cursor: col-resize;
 }
+.resize-none {
+  resize: none;
+}
 .grid-cols-\[280px_1fr\] {
   grid-template-columns: 280px 1fr;
 }
@@ -657,6 +660,9 @@ video {
 }
 .p-8 {
   padding: 2rem;
+}
+.p-4 {
+  padding: 1rem;
 }
 .px-1 {
   padding-left: 0.25rem;

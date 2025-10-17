@@ -1,8 +1,68 @@
 {
+  "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> @emoji-mart/data": {
+    "id": "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> @emoji-mart/data",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_emoji-mart_data_sets_15_native_json.js"
+    ]
+  },
+  "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> emoji-mart": {
+    "id": "..\\node_modules\\@blocknote\\core\\dist\\blocknote.js -> emoji-mart",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_emoji-mart_dist_module_js.js"
+    ]
+  },
+  "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> @emoji-mart/data": {
+    "id": "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> @emoji-mart/data",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_emoji-mart_data_sets_15_native_json.js"
+    ]
+  },
+  "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> emoji-mart": {
+    "id": "..\\node_modules\\@blocknote\\react\\dist\\blocknote-react.js -> emoji-mart",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_emoji-mart_dist_module_js.js"
+    ]
+  },
   "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts": {
     "id": "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts",
     "files": [
       "static/chunks/_app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js"
+    ]
+  },
+  "..\\node_modules\\next\\dist\\client\\index.js -> ../pages/_app": {
+    "id": "..\\node_modules\\next\\dist\\client\\index.js -> ../pages/_app",
+    "files": [
+      "static/chunks/_pages-dir-browser_node_modules_next_dist_pages__app_js.js"
+    ]
+  },
+  "..\\node_modules\\next\\dist\\client\\index.js -> ../pages/_error": {
+    "id": "..\\node_modules\\next\\dist\\client\\index.js -> ../pages/_error",
+    "files": [
+      "static/chunks/_pages-dir-browser_node_modules_next_dist_pages__error_js.js"
+    ]
+  },
+  "components\\blocknote-editor.tsx -> @blocknote/react": {
+    "id": "components\\blocknote-editor.tsx -> @blocknote/react",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_blocknote_react_dist_blocknote-react_js.js"
+    ]
+  },
+  "components\\blocknote-toolbar.tsx -> @blocknote/react": {
+    "id": "components\\blocknote-toolbar.tsx -> @blocknote/react",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_blocknote_react_dist_blocknote-react_js.js"
+    ]
+  },
+  "components\\editor.tsx -> ./blocknote-editor": {
+    "id": "components\\editor.tsx -> ./blocknote-editor",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_blocknote-editor_tsx.js"
+    ]
+  },
+  "components\\editor.tsx -> ./blocknote-toolbar": {
+    "id": "components\\editor.tsx -> ./blocknote-toolbar",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_blocknote-toolbar_tsx.js"
     ]
   }
 }

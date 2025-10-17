@@ -108,25 +108,34 @@ The project has a solid foundation with good architecture and most core features
 
 ## Latest Updates
 
-### 2025-01-17 - BlockNote Editor Integration
+### 2025-01-17 - UI Redesign and BlockNote Integration
 - **Status**: In Progress
-- **Goal**: Fix BlockNote editor and toolbar implementation
-- **Issues**: 
-  - BlockNote import errors preventing editor from loading
-  - Missing toolbar functionality
-  - Editor not properly initializing with content
+- **Goal**: Complete UI redesign with proper header, sidebar, toolbar, and BlockNote editor
+- **Issues**:
+  - Simple textarea editor instead of BlockNote
+  - Theme toggle in wrong location (sidebar instead of header)
+  - No breadcrumbs navigation
+  - No user dropdown with logout
+  - Page content in separate box instead of full-width
+  - Missing BlockNote toolbar
 - **Tasks**:
-  - [x] Fix BlockNote import and component setup
-  - [x] Implement proper toolbar with formatting options
-  - [x] Ensure content loading and saving works correctly
-  - [ ] Test editor functionality across different page states
+  - [x] Create new header component with Pages, theme toggle, +, templates, breadcrumbs, user dropdown
+  - [x] Update layout structure to accommodate new header
+  - [x] Replace simple textarea with BlockNote editor using dynamic imports
+  - [x] Create BlockNote toolbar component
+  - [x] Remove page content container box for full-width layout
+  - [x] Update sidebar to remove theme toggle (moved to header)
+  - [ ] Test complete UI flow and functionality
 - **Completed**:
-  - ✅ Replaced simple textarea with BlockNote editor
-  - ✅ Added FormattingToolbar with rich text editing capabilities
-  - ✅ Implemented proper content loading and saving with JSON serialization
-  - ✅ Added loading states and error handling
-  - ✅ Integrated with existing page management system
-  - ✅ Fixed Prisma client initialization issues
+  - ✅ Created header component with all required elements
+  - ✅ Implemented user dropdown with logout functionality
+  - ✅ Added breadcrumbs navigation component
+  - ✅ Moved theme toggle from sidebar to header
+  - ✅ Replaced simple textarea with BlockNote editor using dynamic imports
+  - ✅ Created BlockNote toolbar component with proper SSR handling
+  - ✅ Updated layout structure for full-width page content
+  - ✅ Removed page content container box
+  - ✅ Updated sidebar to keep only search and favorites
   - ✅ Fixed BlockNote SSR "window is not defined" errors with dynamic imports
-  - ✅ Set up database and seeded with initial data
+  - ✅ Implemented proper content loading and saving with JSON serialization
 

@@ -134,3 +134,12 @@ You are an expert full stack developer in Next.js 15, React 19, TypeScript, Pris
 - Audit dependencies regularly
 - Remove unused dependencies
 - Use proper peer dependency management
+
+## PR Checklist
+Before submitting any pull request, ensure the following:
+
+- **Types complete (no any)**: All TypeScript types are properly defined without using `any`
+- **Zod validation added for any new endpoints**: All new API endpoints have proper Zod schema validation
+- **Unit tests updated/added with meaningful assertions**: Unit tests cover new functionality with proper assertions
+- **Playwright spec added/updated when user-visible behavior changes**: E2E tests cover any user-facing changes
+- **Update docs if commands or flows change**: Documentation is updated when commands or user flows change

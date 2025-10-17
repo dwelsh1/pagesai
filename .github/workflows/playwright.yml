@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install deps
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      - name: Run tests (headless)
+        run: npm run test:ci
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report
+          path: reports/html
+      - name: Upload Playwright Traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: traces
+          path: test-results

@@ -1,0 +1,1 @@
+import { PageCreateSchema } from './page'; test('accepts valid title',()=>{expect(PageCreateSchema.parse({title:'Hello'})).toBeDefined()}); test('rejects empty title',()=>{const r=PageCreateSchema.safeParse({title:''}); expect(r.success).toBe(false)});

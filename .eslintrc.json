@@ -1,0 +1,52 @@
+{
+  "root": true,
+  "env": {
+    "es2022": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "import",
+    "unused-imports",
+    "jsdoc"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:jsdoc/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "warn",
+    "import/order": [
+      "warn",
+      {
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "jsdoc/require-param": "off",
+    "jsdoc/require-returns": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.ts"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "plugins": [
+        "@typescript-eslint"
+      ],
+      "extends": [
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {}
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm i -g pnpm@9
+      - run: pnpm install
+      # Start your app here if you have a dev server
+      # - run: pnpm dev & npx wait-on http://localhost:3000
+      - run: pnpm lighthouse:ci
+      - name: Upload LHCI artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: .lighthouseci

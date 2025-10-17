@@ -1,0 +1,64 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "declaration": false,
+    "sourceMap": true,
+    "types": [
+      "node",
+      "@playwright/test"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@pages/*": [
+        "src/pages/*"
+      ],
+      "@fixtures/*": [
+        "src/fixtures/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@data/*": [
+        "src/test-data/*"
+      ]
+    },
+    "allowJs": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "playwright.config.ts",
+    "src",
+    "tests",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

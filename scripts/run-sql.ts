@@ -1,0 +1,1 @@
+import fs from 'fs'; import path from 'path'; import Database from 'better-sqlite3'; const sql=fs.readFileSync(process.argv[2],'utf8'); const db=new Database(path.join(process.cwd(),'prisma','dev.db')); db.exec(sql); console.log('SQL applied');

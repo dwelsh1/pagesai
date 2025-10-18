@@ -146,3 +146,27 @@ The project has a solid foundation with good architecture and most core features
   - ✅ All UI elements positioned correctly according to specifications
   - ✅ Implemented proper content loading and saving with JSON serialization
 
+### 2025-01-17 - BlockNote Implementation and UI Fixes (v0.3.0)
+- **Status**: Completed
+- **Goal**: Implement full BlockNote editor with floating toolbar, slash commands, and fix UI layout issues
+- **Issues Fixed**:
+  - ✅ Header layout now has single row with Pages controls, vertical separator, left-aligned breadcrumbs, and user dropdown
+  - ✅ Sidebar collapse functionality now works correctly (targets sidebar, not toolbar)
+  - ✅ Dynamic breadcrumbs with home icon, proper separators, and bold current page
+  - ✅ BlockNote editor integrated with Mantine UI components
+  - ✅ Removed placeholder toolbar - BlockNote provides floating toolbar
+  - ✅ Full-width editor content area
+  - ✅ Fixed circular structure JSON error in content saving
+  - ✅ Proper theme integration for dark/light mode
+  - ✅ Custom CSS for better BlockNote theme consistency
+  - ✅ Fixed code block styling with light gray background for better readability
+- **Technical Details**:
+  - Used @blocknote/mantine instead of @blocknote/shadcn due to Tailwind CSS version compatibility
+  - Dynamic imports for SSR compatibility
+  - Proper content persistence with BlockNote JSON format using editor.document
+  - Single header row layout with vertical separator and proper breadcrumb positioning
+  - Fixed content saving to avoid circular structure errors
+  - Added custom CSS for theme integration with improved code block styling
+  - Proper dark/light mode support throughout the application
+  - Code blocks now use light gray background (#f5f5f5) in light mode and medium gray (#2a2a2a) in dark mode
+

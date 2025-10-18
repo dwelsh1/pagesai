@@ -2,6 +2,7 @@
 import { ReactNode, useState } from 'react';
 import Sidebar from '@/src/components/sidebar';
 import { ThemeToggle } from '@/src/components/theme-toggle';
+import Breadcrumbs from '@/src/components/breadcrumbs';
 import { useRouter } from 'next/navigation';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
@@ -36,10 +37,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Top Header Section */}
+      {/* Single Header Row: Pages Controls + Vertical Line + Breadcrumbs + User */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-        {/* First Row: Pages section + Breadcrumbs/User section */}
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center px-4 py-3">
           {/* Left Section - Pages Controls */}
           <div className="flex items-center space-x-3">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Pages</h1>
@@ -83,30 +83,28 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             </button>
           </div>
 
-          {/* Right Section - Breadcrumbs and User */}
-          <div className="flex items-center space-x-4">
-            {/* Breadcrumbs */}
-            <nav className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-              <a href="/" className="hover:text-gray-900 dark:hover:text-white">Home</a>
-              <span>/</span>
-              <span className="text-gray-900 dark:text-white">Current Page</span>
-            </nav>
-            
-            {/* User Dropdown */}
-            <div className="relative">
-              <button
-                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                data-testid="user-menu-button"
-              >
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">A</span>
-                </div>
-                <span className="text-sm font-medium text-gray-900 dark:text-white">admin</span>
-                <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
+          {/* Vertical Separator */}
+          <div className="mx-4 h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+
+          {/* Breadcrumbs Section */}
+          <div className="flex-1">
+            <Breadcrumbs />
+          </div>
+
+          {/* Right Section - User Dropdown */}
+          <div className="relative">
+            <button
+              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              data-testid="user-menu-button"
+            >
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-medium">A</span>
+              </div>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">admin</span>
+              <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -114,7 +112,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar */}
-        <div className={`transition-all duration-300 ${sidebarCollapsed ? 'w-0' : 'w-80'}`}>
+        <div className={`transition-all duration-300 ${sidebarCollapsed ? 'w-0 overflow-hidden' : 'w-80'}`}>
           <Sidebar />
         </div>
         

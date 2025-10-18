@@ -1,0 +1,51 @@
+/* BlockNote Theme Integration */
+.bn-editor {
+  /* Ensure proper theme colors */
+  --bn-colors-editor-background: var(--background);
+  --bn-colors-editor-text: var(--foreground);
+  --bn-colors-menu-background: var(--background);
+  --bn-colors-menu-text: var(--foreground);
+  --bn-colors-toolbar-background: var(--background);
+  --bn-colors-toolbar-text: var(--foreground);
+}
+
+/* Dark mode specific overrides */
+[data-theme="dark"] .bn-editor {
+  --bn-colors-editor-background: #1f2937;
+  --bn-colors-editor-text: #f9fafb;
+  --bn-colors-menu-background: #374151;
+  --bn-colors-menu-text: #f9fafb;
+  --bn-colors-toolbar-background: #374151;
+  --bn-colors-toolbar-text: #f9fafb;
+}
+
+/* Light mode specific overrides */
+[data-theme="light"] .bn-editor {
+  --bn-colors-editor-background: #ffffff;
+  --bn-colors-editor-text: #111827;
+  --bn-colors-menu-background: #f9fafb;
+  --bn-colors-menu-text: #111827;
+  --bn-colors-toolbar-background: #f9fafb;
+  --bn-colors-toolbar-text: #111827;
+}
+
+/* Code block styling improvements - Light gray background for both themes */
+.bn-editor .bn-code-block {
+  background-color: #f5f5f5 !important; /* Light gray that works in both themes */
+  border: 1px solid #e0e0e0 !important; /* Light border */
+  border-radius: 6px;
+  padding: 12px;
+  color: #333 !important; /* Dark text for readability */
+}
+
+[data-theme="dark"] .bn-editor .bn-code-block {
+  background-color: #2a2a2a !important; /* Slightly lighter than pure black */
+  border-color: #404040 !important; /* Dark border */
+  color: #e0e0e0 !important; /* Light text */
+}
+
+[data-theme="light"] .bn-editor .bn-code-block {
+  background-color: #f5f5f5 !important; /* Light gray background */
+  border-color: #e0e0e0 !important; /* Light border */
+  color: #333 !important; /* Dark text */
+}

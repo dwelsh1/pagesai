@@ -1,0 +1,42 @@
+# Prettier ignore patterns
+# Ignore generated files
+.next/
+node_modules/
+dist/
+build/
+coverage/
+
+# Ignore database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignore lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore temporary files
+*.tmp
+*.temp

@@ -1,0 +1,138 @@
+# File Tree: pagesai
+
+**Generated:** 10/18/2025, 4:09:23 PM
+**Root Path:** `d:\gitrepos\pagesai`
+
+```
+├── 📁 app
+│   ├── 📁 (auth)
+│   │   ├── 📁 login
+│   │   │   └── 📄 page.tsx
+│   │   └── 📁 signup
+│   │       └── 📄 page.tsx
+│   ├── 📁 api
+│   │   ├── 📁 auth
+│   │   │   ├── 📁 forgot-password
+│   │   │   │   └── 📄 route.ts
+│   │   │   ├── 📁 login
+│   │   │   │   └── 📄 route.ts
+│   │   │   ├── 📁 logout
+│   │   │   │   └── 📄 route.ts
+│   │   │   ├── 📁 register
+│   │   │   │   └── 📄 route.ts
+│   │   │   └── 📁 reset-password
+│   │   │       └── 📄 route.ts
+│   │   ├── 📁 debug
+│   │   └── 📁 openapi.json
+│   │       └── 📄 route.ts
+│   ├── 📁 docs
+│   │   └── 📄 page.tsx
+│   ├── 📄 favicon.ico
+│   ├── 🖼️ favicon.svg
+│   ├── 🎨 globals.css
+│   ├── 📄 layout.tsx
+│   └── 📄 page.tsx
+├── 📁 docs
+│   ├── 📝 api.md
+│   ├── 📝 developer.md
+│   ├── 📝 plan.md
+│   └── 📝 testing.md
+├── 📁 prisma
+│   ├── 📄 schema.prisma
+│   └── 📄 seed.ts
+├── 📁 public
+├── 📁 src
+│   ├── 📁 components
+│   │   ├── 📁 auth
+│   │   │   ├── 📄 forgot-password.tsx
+│   │   │   ├── 📄 login-form.tsx
+│   │   │   └── 📄 signup-form.tsx
+│   │   └── 📁 ui
+│   │       ├── 📄 button.tsx
+│   │       ├── 📄 dialog.tsx
+│   │       ├── 📄 input.tsx
+│   │       └── 📄 label.tsx
+│   ├── 📁 lib
+│   │   ├── 📁 validators
+│   │   │   ├── 📄 api.ts
+│   │   │   └── 📄 auth.ts
+│   │   ├── 📄 auth.ts
+│   │   ├── 📄 db.ts
+│   │   ├── 📄 openapi.ts
+│   │   ├── 📄 password.ts
+│   │   └── 📄 utils.ts
+│   └── 📁 server
+│       └── 📄 auth.ts
+├── 📁 tests
+│   ├── 📁 app
+│   │   ├── 📁 (auth)
+│   │   │   └── 📁 signup
+│   │   │       └── 📄 page.test.tsx
+│   │   ├── 📁 api
+│   │   │   ├── 📁 auth
+│   │   │   │   ├── 📁 forgot-password
+│   │   │   │   │   └── 📄 route.test.ts
+│   │   │   │   ├── 📁 login
+│   │   │   │   │   └── 📄 route.test.ts
+│   │   │   │   ├── 📁 logout
+│   │   │   │   │   └── 📄 route.test.ts
+│   │   │   │   ├── 📁 register
+│   │   │   │   │   └── 📄 route.test.ts
+│   │   │   │   └── 📁 reset-password
+│   │   │   │       └── 📄 route.test.ts
+│   │   │   └── 📁 openapi.json
+│   │   │       └── 📄 route.test.ts
+│   │   ├── 📁 docs
+│   │   │   └── 📄 page.test.tsx
+│   │   ├── 📄 layout.test.tsx
+│   │   ├── 📄 login-page.test.tsx
+│   │   └── 📄 page.test.tsx
+│   ├── 📁 components
+│   │   └── 📁 auth
+│   │       ├── 📄 forgot-password.test.tsx
+│   │       ├── 📄 login-form.test.tsx
+│   │       └── 📄 signup-form.test.tsx
+│   ├── 📁 lib
+│   │   ├── 📁 validators
+│   │   │   └── 📄 auth.test.ts
+│   │   └── 📄 password.test.ts
+│   ├── 📁 src
+│   │   ├── 📁 components
+│   │   │   └── 📁 ui
+│   │   │       ├── 📄 button.test.tsx
+│   │   │       ├── 📄 dialog.test.tsx
+│   │   │       ├── 📄 input.test.tsx
+│   │   │       └── 📄 label.test.tsx
+│   │   ├── 📁 lib
+│   │   │   ├── 📁 validators
+│   │   │   │   ├── 📄 api-extended.test.ts
+│   │   │   │   ├── 📄 api.test.ts
+│   │   │   │   └── 📄 auth-extended.test.ts
+│   │   │   ├── 📄 auth.test.ts
+│   │   │   ├── 📄 db.test.ts
+│   │   │   └── 📄 openapi.test.ts
+│   │   └── 📁 server
+│   │       ├── 📄 auth-extended.test.ts
+│   │       └── 📄 auth.test.ts
+│   └── 📄 setup.ts
+├── ⚙️ .cursorrules
+├── ⚙️ .gitignore
+├── ⚙️ .prettierignore
+├── ⚙️ .prettierrc
+├── 📝 README.md
+├── 📝 TREE.md
+├── 📝 changelog.md
+├── 📄 dev.db
+├── 📄 eslint.config.js
+├── 📄 next.config.js
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 postcss.config.js
+├── 📄 tailwind.config.js
+├── 📝 testing.md
+├── ⚙️ tsconfig.json
+└── 📄 vitest.config.mjs
+```
+
+---
+*Generated by FileTree Pro Extension*

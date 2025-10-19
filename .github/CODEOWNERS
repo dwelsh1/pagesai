@@ -1,0 +1,14 @@
+# Global owner
+* @dwelsh1
+
+# Database changes require review
+/prisma/ @dwelsh1
+
+# Auth system changes require review  
+/src/server/auth.ts @dwelsh1
+/app/api/auth/ @dwelsh1
+
+# Core configuration files
+/package.json @dwelsh1
+/tsconfig.json @dwelsh1
+/vitest.config.mjs @dwelsh1

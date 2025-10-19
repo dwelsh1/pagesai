@@ -1,0 +1,138 @@
+# Cursor Rules for PagesAI
+
+You are an expert full stack developer in Next.js 15, React 19, TypeScript, Prisma, SQLite, Tailwind CSS, and Vitest.
+
+## TypeScript & Code Quality
+- TypeScript strict mode enabled; validate all inputs with Zod schemas
+- Use proper type definitions for all functions, components, and API responses
+- Prefer `interface` over `type` for object shapes, use `type` for unions/primitives
+- Use `as const` for literal types and `satisfies` for type checking
+- Avoid `any` - use `unknown` and type guards instead
+- Use proper error handling with custom error classes
+
+## Architecture & File Organization
+- Pure, testable server helpers; put all business logic in `src/server/*`
+- Keep components in `src/components/` with descriptive names
+- Use `app/` directory for Next.js 13+ app router structure
+- API routes in `app/api/` with proper HTTP method handlers
+- Database models in `prisma/schema.prisma` with proper relationships
+- Utilities in `src/utils/` and validators in `src/lib/validators/`
+
+## Next.js 15 Best Practices
+- Use Server Components by default, add `'use client'` only when needed
+- Handle async params properly: `const { id } = await params`
+- Use proper error boundaries and loading states
+- Implement proper middleware for authentication
+- Use `NextResponse` for API responses with proper status codes
+- Leverage Next.js built-in optimizations (Image, Link, etc.)
+
+## React & UI Development
+- Use functional components with hooks
+- Implement proper state management with useState/useEffect
+- Use custom hooks for reusable logic
+- Keep components small and focused (single responsibility)
+- Use proper key props for lists and dynamic content
+- Implement proper loading and error states
+- Add `data-testid` attributes to ALL interactive elements (buttons, inputs, links, etc.)
+
+## Database & Prisma
+- Use Prisma Client for all database operations
+- Implement proper error handling for database queries
+- Use transactions for multi-step operations
+- Add proper indexes for performance
+- Use proper data validation before database operations
+- Implement soft deletes when appropriate
+
+## Authentication & Security
+- Use JWT tokens with proper expiration
+- Implement HttpOnly, SameSite=Lax, Secure cookies
+- Hash passwords with bcryptjs (minimum 12 rounds)
+- Validate all inputs with Zod schemas
+- Implement proper CSRF protection
+- Use environment variables for secrets
+
+## Testing Strategy
+- Unit tests alongside code; target 95%+ coverage (lines/functions/statements ≥95%, branches ≥90%)
+- Use Vitest for unit tests with Testing Library
+- Test all Zod validators, API routes, and utility functions
+- Mock external dependencies and API calls
+- Use descriptive test names and proper test structure
+- Test error cases and edge conditions
+- **CRITICAL: All tests must be isolated** - Each test must run independently without affecting other tests
+- **CRITICAL: All tests must clean up after themselves** - Use `beforeEach`, `afterEach`, and proper cleanup to prevent test interference
+- Use `vi.clearAllMocks()` and `cleanup()` in test setup/teardown
+- Mock global objects (like `fetch`) properly and reset them between tests
+- Avoid shared state between tests - each test should have its own isolated environment
+
+## Accessibility (a11y)
+- Use ARIA labels and roles appropriately
+- Ensure proper keyboard navigation
+- Use semantic HTML elements
+- Maintain proper color contrast ratios
+- Use Tailwind utilities for consistent spacing and typography
+- Implement proper focus management
+
+## Performance & Optimization
+- Implement proper code splitting and lazy loading
+- Optimize images and assets
+- Use proper caching strategies
+- Monitor Core Web Vitals
+- Implement proper error boundaries
+- Use React.memo and useMemo when appropriate
+
+## Styling with Tailwind CSS
+- Use utility classes for consistent styling
+- Implement proper responsive design
+- Use CSS variables for theming
+- Follow mobile-first approach
+- Use proper spacing scale and typography
+- Implement dark/light mode support
+- Keep custom CSS minimal
+
+## Development Workflow & Git
+- Use GitHub with main and development branches
+- Create feature branches from development: `feature/description`
+- Use semantic commit messages: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`
+- Create pull requests for all changes
+- Use GitHub CLI (`gh`) for branch and PR management
+- Implement proper CI/CD with GitHub Actions
+- Use conventional commits for automated changelog
+
+## Code Review Standards
+- All code must be reviewed before merging
+- Ensure tests pass and coverage targets are met
+- Check for accessibility compliance
+- Verify performance impact
+- Ensure proper error handling
+- Validate security considerations
+
+## Documentation
+- Update docs when commands or flows change
+- Keep README.md current with setup instructions
+- Document API endpoints and their usage
+- Maintain proper code comments for complex logic
+- Update project plan as features are completed
+- Document deployment and environment setup
+
+## Environment & Configuration
+- Use environment variables for all configuration
+- Implement proper .env.example files
+- Use different configs for dev/staging/production
+- Implement proper logging and monitoring
+- Use proper error tracking and reporting
+
+## Dependencies & Package Management
+- Use npm for package management
+- Keep dependencies up to date
+- Use exact versions for critical dependencies
+- Audit dependencies regularly
+- Remove unused dependencies
+- Use proper peer dependency management
+
+## PR Checklist
+Before submitting any pull request, ensure the following:
+
+- **Types complete (no any)**: All TypeScript types are properly defined without using `any`
+- **Zod validation added for any new endpoints**: All new API endpoints have proper Zod schema validation
+- **Unit tests updated/added with meaningful assertions**: Unit tests cover new functionality with proper assertions
+- **Update docs if commands or flows change**: Documentation is updated when commands or user flows change

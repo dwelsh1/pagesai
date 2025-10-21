@@ -645,7 +645,6 @@ export default function DiagnosticsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
     </MainLayout>
   );
 }

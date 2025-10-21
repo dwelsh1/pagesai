@@ -3,7 +3,7 @@
 import { MainLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, FileText, Clock, TrendingUp, Users } from 'lucide-react';
+import { Plus, FileText, Clock, TrendingUp, Calendar } from 'lucide-react';
 
 export default function DashboardPage() {
   const handleCreatePage = () => {
@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const stats = {
     totalPages: 24,
     recentActivity: 8,
-    collaborators: 3,
+    pagesThisWeek: 5,
     storageUsed: '2.4 MB'
   };
 
@@ -50,8 +50,8 @@ export default function DashboardPage() {
               Import Document
             </Button>
             <Button variant="outline" className="flex items-center">
-              <Users className="h-4 w-4 mr-2" />
-              Share Workspace
+              <Calendar className="h-4 w-4 mr-2" />
+              View Calendar
             </Button>
           </div>
         </div>
@@ -86,13 +86,13 @@ export default function DashboardPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Collaborators</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Pages This Week</CardTitle>
+              <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.collaborators}</div>
+              <div className="text-2xl font-bold">{stats.pagesThisWeek}</div>
               <p className="text-xs text-muted-foreground">
-                Active team members
+                New pages created
               </p>
             </CardContent>
           </Card>
@@ -187,10 +187,10 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900">
-                      Collaborate with others
+                      Export your work
                     </p>
                     <p className="text-xs text-gray-500">
-                      Share your workspace and work together in real-time
+                      Export pages to PDF, HTML, or Markdown formats
                     </p>
                   </div>
                 </div>

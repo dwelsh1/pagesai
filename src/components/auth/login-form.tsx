@@ -2,45 +2,21 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { loginSchema, type LoginInput } from '@/lib/validators/auth';
 import { ZodError } from 'zod';
 
-export function LoginSuccessModal({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className='fixed inset-0 bg-black' onClick={onClose}></div>
-      <div className='relative bg-white rounded-lg p-6 max-w-md w-full mx-4'>
-        <h2 className='text-xl font-semibold mb-2'>Login Successful!</h2>
-        <p className='text-gray-600 mb-4'>
-          Welcome to PagesAI. You have successfully logged in.
-        </p>
-        <div className='flex justify-end'>
-          <Button onClick={onClose}>Continue</Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function LoginForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState<LoginInput>({
     username: '',
     password: '',
   });
   const [errors, setErrors] = useState<Partial<LoginInput>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,8 +41,8 @@ export function LoginForm() {
         throw new Error(errorData.error || 'Login failed');
       }
 
-      // Show success modal
-      setShowSuccessModal(true);
+      // Redirect to dashboard on successful login
+      router.push('/dashboard');
     } catch (error) {
       if (error instanceof ZodError) {
         // Handle Zod validation errors
@@ -175,10 +151,6 @@ export function LoginForm() {
         </Link>
       </div>
 
-      <LoginSuccessModal
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-      />
     </>
   );
 }

@@ -4,13 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Menu, User, LogOut, Settings } from 'lucide-react';
+import { Search, Menu, LogOut, Settings } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 
 export function Header() {
   const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
-  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,51 +76,27 @@ export function Header() {
             <Menu className="h-5 w-5" />
           </Button>
 
-          {/* User Profile */}
-          <div className="relative">
+          {/* Settings and Logout */}
+          <div className="flex items-center space-x-2">
+            <Link
+              href="/settings"
+              className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+              title="Settings"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Link>
+            
             <Button
               variant="ghost"
-              size="icon"
-              onClick={() => setShowUserMenu(!showUserMenu)}
-              className="rounded-full"
-              title="User menu"
+              size="sm"
+              onClick={handleLogout}
+              className="text-gray-700 hover:bg-gray-100"
+              title="Sign out"
             >
-              <User className="h-5 w-5" />
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign out
             </Button>
-
-            {/* User Dropdown Menu */}
-            {showUserMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user?.username || 'User'}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {user?.email || 'user@example.com'}
-                  </p>
-                </div>
-                
-                <Link
-                  href="/settings"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  onClick={() => setShowUserMenu(false)}
-                >
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </Link>
-                
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setShowUserMenu(false);
-                  }}
-                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign out
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -10,12 +10,26 @@ export default function HomePage() {
         <p className='text-gray-600 mb-8'>
           Your modern web application is ready!
         </p>
-        <Link
-          href='/login'
-          className='inline-block bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors'
-        >
-          Go to Login
-        </Link>
+        <div className='space-x-4'>
+          <Link
+            href='/login'
+            className='inline-block bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors'
+          >
+            Go to Login
+          </Link>
+          <Link
+            href='/dashboard'
+            className='inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors'
+          >
+            Dashboard
+          </Link>
+          <Link
+            href='/diagnostics'
+            className='inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors'
+          >
+            System Diagnostics
+          </Link>
+        </div>
       </div>
     </div>
   );

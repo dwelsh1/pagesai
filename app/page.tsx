@@ -18,8 +18,14 @@ export default function HomePage() {
             Go to Login
           </Link>
           <Link
-            href='/diagnostics'
+            href='/dashboard'
             className='inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors'
+          >
+            Dashboard
+          </Link>
+          <Link
+            href='/diagnostics'
+            className='inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors'
           >
             System Diagnostics
           </Link>

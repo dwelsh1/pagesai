@@ -6,8 +6,9 @@
 ![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat-square&logo=prisma)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css)
 ![Vitest](https://img.shields.io/badge/Vitest-Testing-6E9F18?style=flat-square&logo=vitest)
+![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=flat-square&logo=github-actions)
 
-A modern web application built with Next.js 15, React 19, TypeScript, and a comprehensive tech stack for authentication and user management.
+A modern web application built with Next.js 15, React 19, TypeScript, and a comprehensive tech stack. Features include authentication, dashboard with responsive layout, system diagnostics, and hierarchical page navigation.
 
 ## 🚀 Features
 

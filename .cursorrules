@@ -130,6 +130,19 @@ You are an expert full stack developer in Next.js 15, React 19, TypeScript, Pris
 - Remove unused dependencies
 - Use proper peer dependency management
 
+## Documentation & Testing Requirements
+- **Documentation Updates**: Always update relevant documentation when implementing new features
+  - Update `changelog.md` with new features, fixes, and changes
+  - Update `docs/plan.md` with implementation status and completed features
+  - Update `README.md` if setup instructions or features change
+  - Create or update `docs/revert_plan.md` for major workflow changes
+- **Testing Requirements**: Maintain comprehensive test coverage
+  - **Unit Tests**: Create unit tests for all new components, API routes, and utilities
+  - **Test Coverage**: Maintain 95%+ test coverage for all new code
+  - **Test Quality**: Use meaningful assertions and test edge cases
+  - **Test Isolation**: Each test must run independently without affecting other tests
+  - **Test Cleanup**: Use proper setup/teardown to prevent test interference
+
 ## PR Checklist
 Before submitting any pull request, ensure the following:
 
@@ -137,4 +150,6 @@ Before submitting any pull request, ensure the following:
 - **Zod validation added for any new endpoints**: All new API endpoints have proper Zod schema validation
 - **Unit tests updated/added with meaningful assertions**: Unit tests cover new functionality with proper assertions
 - **Tooltips added to all interactive elements**: All buttons, links, icons, and clickable elements have descriptive tooltips
+- **Documentation updated**: All relevant documentation files updated for new features/changes
+- **Test coverage maintained**: New code has 95%+ test coverage with proper assertions
 - **Update docs if commands or flows change**: Documentation is updated when commands or user flows change

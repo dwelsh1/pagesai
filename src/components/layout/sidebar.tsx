@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -38,9 +39,18 @@ export function Sidebar({
   onEditPage, 
   onDeletePage 
 }: SidebarProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedPages, setExpandedPages] = useState<Set<string>>(new Set());
   const [showContextMenu, setShowContextMenu] = useState<string | null>(null);
+
+  const handleCreatePage = () => {
+    if (onCreatePage) {
+      onCreatePage();
+    } else {
+      router.push('/dashboard/page/create');
+    }
+  };
 
   // Mock data for demonstration
   const mockPages: Page[] = [
@@ -194,7 +204,7 @@ export function Sidebar({
           <Button
             variant="ghost"
             size="icon"
-            onClick={onCreatePage}
+            onClick={handleCreatePage}
             className="h-6 w-6"
             title="Create new page"
           >

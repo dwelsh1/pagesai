@@ -25,6 +25,9 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.1.0",
+    "@blocknote/core": "^0.41.1",
+    "@blocknote/mantine": "^0.41.1",
+    "@blocknote/react": "^0.41.1",
     "@prisma/client": "6.16.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",

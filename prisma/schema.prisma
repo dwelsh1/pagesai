@@ -18,5 +18,28 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Relations
+  pages     Page[]
+
   @@map("users")
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   // JSON string of BlockNote content
+  description String?  // Optional page description
+  tags        String?  // Comma-separated tags
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId    String?  // For hierarchical pages
+  parent      Page?    @relation("PageHierarchy", fields: [parentId], references: [id])
+  children    Page[]   @relation("PageHierarchy")
+
+  @@map("pages")
 }

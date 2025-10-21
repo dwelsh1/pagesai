@@ -15,8 +15,10 @@ export function LoginSuccessModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  if (!isOpen) return null;
+
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center ${isOpen ? 'block' : 'hidden'}`}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className='fixed inset-0 bg-black' onClick={onClose}></div>
       <div className='relative bg-white rounded-lg p-6 max-w-md w-full mx-4'>
         <h2 className='text-xl font-semibold mb-2'>Login Successful!</h2>

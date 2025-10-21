@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
-import { GET } from '@/app/api/diagnostics/route';
+import { GET } from '../../../../app/api/diagnostics/route';
 
 // Mock the server auth module
 vi.mock('@/server/auth', () => ({

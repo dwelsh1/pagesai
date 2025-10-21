@@ -274,53 +274,32 @@ describe('LoginForm', () => {
     });
   });
 
-  it('should open forgot password modal when link is clicked', async () => {
-    const user = userEvent.setup();
+  it('should render forgot password link', () => {
     render(<LoginForm />);
 
     const forgotPasswordLink = screen.getByTestId('forgot-password-link');
-    await user.click(forgotPasswordLink);
-
-    await waitFor(() => {
-      expect(screen.getByText('Forgot Password?')).toBeInTheDocument();
-    });
+    expect(forgotPasswordLink).toBeInTheDocument();
+    expect(forgotPasswordLink).toHaveAttribute('href', '/forgot-password');
+    expect(forgotPasswordLink).toHaveTextContent('Forgot your password?');
   });
 
-  it('should close forgot password modal when cancel button is clicked', async () => {
-    const user = userEvent.setup();
+  it('should render sign up link', () => {
     render(<LoginForm />);
 
-    const forgotPasswordLink = screen.getByTestId('forgot-password-link');
-    await user.click(forgotPasswordLink);
-
-    await waitFor(() => {
-      expect(screen.getByText('Forgot Password?')).toBeInTheDocument();
-    });
-
-    // Find and click the cancel button in the forgot password modal
-    const cancelButton = screen.getByTestId('cancel-button');
-    await user.click(cancelButton);
-
-    await waitFor(() => {
-      expect(screen.queryByText('Forgot Password?')).not.toBeInTheDocument();
-    });
+    const signUpLink = screen.getByTestId('sign-up-link');
+    expect(signUpLink).toBeInTheDocument();
+    expect(signUpLink).toHaveAttribute('href', '/signup');
+    expect(signUpLink).toHaveTextContent('Sign up');
   });
 
-  it('should handle forgot password modal interactions', async () => {
-    const user = userEvent.setup();
+  it('should handle navigation links correctly', () => {
     render(<LoginForm />);
 
-    // Test opening the modal
+    // Test that both navigation links are present and have correct hrefs
     const forgotPasswordLink = screen.getByTestId('forgot-password-link');
-    await user.click(forgotPasswordLink);
-
-    await waitFor(() => {
-      expect(screen.getByText('Forgot Password?')).toBeInTheDocument();
-    });
-
-    // Test that the modal contains the expected elements
-    expect(screen.getByTestId('email-input')).toBeInTheDocument();
-    expect(screen.getByTestId('send-reset-button')).toBeInTheDocument();
-    expect(screen.getByTestId('cancel-button')).toBeInTheDocument();
+    const signUpLink = screen.getByTestId('sign-up-link');
+    
+    expect(forgotPasswordLink).toHaveAttribute('href', '/forgot-password');
+    expect(signUpLink).toHaveAttribute('href', '/signup');
   });
 });

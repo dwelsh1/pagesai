@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **System Diagnostics Page**:
+  - Comprehensive system monitoring and debugging tool
+  - Real-time system status display (server, API, online status)
+  - Package version tracking for all dependencies
+  - Performance metrics (uptime, memory usage, CPU usage)
+  - Console log capture and display functionality
+  - Quick Actions: Clear Auth, Reset Data, Reload App, Simulate Error
+  - Export functionality for diagnostics reports and console logs
+  - Error injection capabilities for testing error handling
+  - Proper confirmation modals for destructive actions
+  - Light theme styling with consistent UI components
+  - Tooltips on all interactive elements for better UX
+
+- **API Endpoints**:
+  - `/api/diagnostics` - Returns comprehensive system information
+  - Proper error handling and response formatting
+
+- **UI Components**:
+  - Card component for structured content display
+  - Badge component for status indicators
+  - Separator component for visual division
+  - Enhanced Button component with cursor pointer styling
+
 - **Code Quality & Formatting**:
   - Prettier integration with ESLint for consistent code formatting
   - Custom Prettier configuration (`.prettierrc`) with project-specific rules

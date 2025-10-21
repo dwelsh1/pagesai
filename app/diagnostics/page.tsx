@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { MainLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,7 +30,8 @@ import {
   Package,
   Settings,
   Activity,
-  Bug
+  Bug,
+  ArrowLeft
 } from 'lucide-react';
 
 interface DiagnosticsData {
@@ -78,6 +80,7 @@ interface DiagnosticsData {
 }
 
 export default function DiagnosticsPage() {
+  const router = useRouter();
   const [diagnostics, setDiagnostics] = useState<DiagnosticsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -288,6 +291,15 @@ export default function DiagnosticsPage() {
             </p>
           </div>
           <div className="flex items-center space-x-2">
+            <Button 
+              onClick={() => router.push('/dashboard')} 
+              variant="outline" 
+              size="sm" 
+              title="Back to Dashboard"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
             <Button onClick={fetchDiagnostics} variant="outline" size="sm" title="Refresh diagnostics data">
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh

@@ -71,6 +71,7 @@ You are an expert full stack developer in Next.js 15, React 19, TypeScript, Pris
 - Maintain proper color contrast ratios
 - Use Tailwind utilities for consistent spacing and typography
 - Implement proper focus management
+- **Add tooltips to ALL interactive elements**: Buttons, links, icons, and any clickable elements must have descriptive tooltips using the `title` attribute
 
 ## Performance & Optimization
 - Implement proper code splitting and lazy loading
@@ -135,4 +136,5 @@ Before submitting any pull request, ensure the following:
 - **Types complete (no any)**: All TypeScript types are properly defined without using `any`
 - **Zod validation added for any new endpoints**: All new API endpoints have proper Zod schema validation
 - **Unit tests updated/added with meaningful assertions**: Unit tests cover new functionality with proper assertions
+- **Tooltips added to all interactive elements**: All buttons, links, icons, and clickable elements have descriptive tooltips
 - **Update docs if commands or flows change**: Documentation is updated when commands or user flows change

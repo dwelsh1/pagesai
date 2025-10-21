@@ -14,7 +14,8 @@ import {
   ChevronDown,
   MoreHorizontal,
   Edit,
-  Trash2
+  Trash2,
+  Activity
 } from 'lucide-react';
 
 interface Page {
@@ -233,15 +234,17 @@ export function Sidebar({
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-200">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onCreatePage}
-          className="w-full"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Page
-        </Button>
+        <Link href="/diagnostics">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            title="Open System Diagnostics"
+          >
+            <Activity className="h-4 w-4 mr-2" />
+            Diagnostics
+          </Button>
+        </Link>
       </div>
     </aside>
   );

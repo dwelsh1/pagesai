@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -40,11 +40,17 @@ export function Sidebar({
   onDeletePage 
 }: SidebarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedPages, setExpandedPages] = useState<Set<string>>(new Set());
   const [showContextMenu, setShowContextMenu] = useState<string | null>(null);
   const [fetchedPages, setFetchedPages] = useState<Page[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Get current page ID from pathname
+  const currentPageId = pathname.includes('/dashboard/page/') 
+    ? pathname.split('/dashboard/page/')[1]?.split('/')[0]
+    : null;
 
   // Fetch pages from API
   useEffect(() => {
@@ -114,11 +120,14 @@ export function Sidebar({
   const renderPage = (page: Page, level = 0) => {
     const hasChildren = page.children && page.children.length > 0;
     const isExpanded = expandedPages.has(page.id);
+    const isActive = currentPageId === page.id;
     const indentClass = `pl-${level * 4}`;
 
     return (
       <div key={page.id} className="group">
-        <div className={`flex items-center justify-between py-1 px-2 hover:bg-gray-100 rounded-md ${indentClass}`}>
+        <div className={`flex items-center justify-between py-1 px-2 hover:bg-gray-100 rounded-md ${indentClass} ${
+          isActive ? 'bg-blue-50 border-l-2 border-blue-500' : ''
+        }`}>
           <div className="flex items-center flex-1 min-w-0">
             {hasChildren ? (
               <button
@@ -138,7 +147,9 @@ export function Sidebar({
             
             <Link
               href={`/dashboard/page/${page.id}`}
-              className="flex items-center flex-1 min-w-0 text-sm text-gray-700 hover:text-gray-900"
+              className={`flex items-center flex-1 min-w-0 text-sm hover:text-gray-900 ${
+                isActive ? 'text-blue-700 font-medium' : 'text-gray-700'
+              }`}
             >
               {hasChildren ? (
                 isExpanded ? (
@@ -147,7 +158,9 @@ export function Sidebar({
                   <Folder className="h-4 w-4 mr-2 text-blue-500 flex-shrink-0" />
                 )
               ) : (
-                <FileText className="h-4 w-4 mr-2 text-gray-400 flex-shrink-0" />
+                <FileText className={`h-4 w-4 mr-2 flex-shrink-0 ${
+                  isActive ? 'text-blue-500' : 'text-gray-400'
+                }`} />
               )}
               <span className="truncate">{page.title}</span>
             </Link>

@@ -17,7 +17,20 @@ const schema = BlockNoteSchema.create({
 // Dynamic import for BlockNote editor to avoid SSR issues
 const BlockNoteEditor = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
-    default: mod.BlockNoteViewEditor
+    default: ({ editor, onContentChange, editable, className }: any) => {
+      const { BlockNoteViewEditor, BlockNoteContext } = mod;
+      
+      return (
+        <BlockNoteContext.Provider value={editor}>
+          <BlockNoteViewEditor
+            editor={editor}
+            onContentChange={onContentChange}
+            editable={editable}
+            className={className}
+          />
+        </BlockNoteContext.Provider>
+      );
+    }
   })),
   { 
     ssr: false,

@@ -36,7 +36,6 @@ const BlockNoteEditor = dynamic(
           <ComponentsContext.Provider value={components}>
             <BlockNoteViewRaw 
               editor={editor}
-              onContentChange={onContentChange}
             />
           </ComponentsContext.Provider>
         </BlockNoteContext.Provider>

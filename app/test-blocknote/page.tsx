@@ -17,25 +17,6 @@ const DirectBlockNoteTest = dynamic(
     
     const editor = useCreateBlockNote({
       schema,
-      initialContent: [
-        {
-          id: '1',
-          type: 'paragraph',
-          props: {
-            textColor: 'default',
-            backgroundColor: 'default',
-            textAlignment: 'left',
-          },
-          content: [
-            {
-              type: 'text',
-              text: 'Hello from useCreateBlockNote!',
-              styles: {},
-            },
-          ],
-          children: [],
-        },
-      ],
     });
 
     return (
@@ -62,25 +43,6 @@ const DynamicBlockNoteTest = dynamic(
       
       const editor = useCreateBlockNote({
         schema,
-        initialContent: [
-          {
-            id: '2',
-            type: 'paragraph',
-            props: {
-              textColor: 'default',
-              backgroundColor: 'default',
-              textAlignment: 'left',
-            },
-            content: [
-              {
-                type: 'text',
-                text: 'Hello from dynamic useCreateBlockNote!',
-                styles: {},
-              },
-            ],
-            children: [],
-          },
-        ],
       });
 
       return (

@@ -1,23 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
 import dynamic from 'next/dynamic';
-
-const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-  },
-});
 
 // Test 1: Direct import using useCreateBlockNote + BlockNoteViewEditor (client-side only)
 const DirectBlockNoteTest = dynamic(
   () => Promise.resolve(() => {
     const { useCreateBlockNote, BlockNoteViewEditor } = require('@blocknote/react');
     
-    const editor = useCreateBlockNote({
-      schema,
-    });
+    const editor = useCreateBlockNote();
 
     return (
       <div className="p-4 border rounded">
@@ -41,9 +32,7 @@ const DynamicBlockNoteTest = dynamic(
     default: () => {
       const { useCreateBlockNote, BlockNoteViewEditor } = mod;
       
-      const editor = useCreateBlockNote({
-        schema,
-      });
+      const editor = useCreateBlockNote();
 
       return (
         <div className="p-4 border rounded">

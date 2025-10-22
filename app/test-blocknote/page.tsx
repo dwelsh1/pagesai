@@ -25,15 +25,15 @@ const BlockNoteWrapper = dynamic(
   }
 );
 
-// Test 1: Direct import using BlockNoteViewEditor
+// Test 1: Direct import using BlockNoteView (like sgbj/notion-clone)
 const DirectBlockNoteTest = dynamic(
   () => Promise.resolve(({ editor }: { editor: any }) => {
-    const { BlockNoteViewEditor } = require('@blocknote/react');
+    const { BlockNoteView } = require('@blocknote/react');
 
     return (
       <div className="p-4 border rounded">
-        <h3 className="text-lg font-semibold mb-2">Test 1: BlockNoteViewEditor</h3>
-        <BlockNoteViewEditor 
+        <h3 className="text-lg font-semibold mb-2">Test 1: BlockNoteView</h3>
+        <BlockNoteView 
           editor={editor}
           className="min-h-[200px] border rounded p-2"
         />
@@ -46,16 +46,16 @@ const DirectBlockNoteTest = dynamic(
   }
 );
 
-// Test 2: Dynamic import using BlockNoteViewEditor
+// Test 2: Dynamic import using BlockNoteView (like sgbj/notion-clone)
 const DynamicBlockNoteTest = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: ({ editor }: { editor: any }) => {
-      const { BlockNoteViewEditor } = mod;
+      const { BlockNoteView } = mod;
 
       return (
         <div className="p-4 border rounded">
-          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic BlockNoteViewEditor</h3>
-          <BlockNoteViewEditor 
+          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic BlockNoteView</h3>
+          <BlockNoteView 
             editor={editor}
             className="min-h-[200px] border rounded p-2"
           />
@@ -118,8 +118,8 @@ export default function TestBlockNotePage() {
         <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded">
           <h3 className="text-lg font-semibold mb-2">Instructions:</h3>
           <ul className="list-disc list-inside space-y-1 text-sm">
-            <li>Test 1 should work with direct imports</li>
-            <li>Test 2 tests dynamic imports (what we're using)</li>
+            <li>Test 1 uses BlockNoteView with direct imports (like sgbj/notion-clone)</li>
+            <li>Test 2 uses BlockNoteView with dynamic imports</li>
             <li>Test 3 is a fallback HTML renderer</li>
             <li>Try clicking in each editor to see which ones work</li>
           </ul>

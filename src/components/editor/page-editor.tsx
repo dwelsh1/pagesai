@@ -1,7 +1,7 @@
 'use client';
 
-import { BlockNoteEditor, BlockNoteView } from '@blocknote/react';
-import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
+import { BlockNoteViewEditor, BlockNoteContext } from '@blocknote/react';
+import { BlockNoteEditor, BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -96,7 +96,7 @@ export function PageEditor({
     } catch (error) {
       console.error('Auto-save failed:', error);
     }
-  }, [editor, hasUnsavedChanges, pageId, title, content, description]);
+  }, [editor, hasUnsavedChanges, pageId, title, description]);
 
   // Auto-save every 30 seconds
   useEffect(() => {
@@ -268,11 +268,13 @@ export function PageEditor({
         </CardHeader>
         <CardContent>
           <div className="min-h-[500px] border rounded-lg">
-            <BlockNoteView
-              editor={editor}
-              theme="light"
-              className="prose max-w-none"
-            />
+            <BlockNoteContext.Provider value={editor}>
+              <BlockNoteViewEditor
+                editor={editor}
+                theme="light"
+                className="prose max-w-none"
+              />
+            </BlockNoteContext.Provider>
           </div>
         </CardContent>
       </Card>

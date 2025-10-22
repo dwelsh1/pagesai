@@ -11,7 +11,7 @@ vi.mock('@blocknote/react', () => ({
       destroy: vi.fn(),
     })),
   },
-  BlockNoteView: vi.fn(({ editor }) => (
+  BlockNoteViewEditor: vi.fn(({ editor }) => (
     <div data-testid="blocknote-editor">Mock Editor</div>
   )),
 }));

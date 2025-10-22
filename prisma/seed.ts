@@ -57,6 +57,160 @@ async function main() {
     email: forgotPasswordUser.email,
   });
 
+  // Create test pages
+  const testPage1 = await prisma.page.upsert({
+    where: { id: 'test-page-1' },
+    update: {},
+    create: {
+      id: 'test-page-1',
+      title: 'Welcome to PagesAI',
+      content: JSON.stringify([
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'Welcome to PagesAI! This is your first page. You can edit this content using the rich text editor.',
+            },
+          ],
+        },
+        {
+          type: 'heading',
+          props: { level: 2 },
+          content: [
+            {
+              type: 'text',
+              text: 'Getting Started',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'Here are some things you can do:',
+            },
+          ],
+        },
+        {
+          type: 'bulletListItem',
+          content: [
+            {
+              type: 'text',
+              text: 'Create new pages',
+            },
+          ],
+        },
+        {
+          type: 'bulletListItem',
+          content: [
+            {
+              type: 'text',
+              text: 'Edit existing pages',
+            },
+          ],
+        },
+        {
+          type: 'bulletListItem',
+          content: [
+            {
+              type: 'text',
+              text: 'Organize pages hierarchically',
+            },
+          ],
+        },
+      ]),
+      description: 'Your first page in PagesAI',
+      tags: 'welcome,getting-started',
+      userId: testUser.id,
+    },
+  });
+
+  const testPage2 = await prisma.page.upsert({
+    where: { id: 'test-page-2' },
+    update: {},
+    create: {
+      id: 'test-page-2',
+      title: 'Sample Document',
+      content: JSON.stringify([
+        {
+          type: 'heading',
+          props: { level: 1 },
+          content: [
+            {
+              type: 'text',
+              text: 'Sample Document',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'This is a sample document to demonstrate the rich text editor capabilities.',
+            },
+          ],
+        },
+        {
+          type: 'heading',
+          props: { level: 2 },
+          content: [
+            {
+              type: 'text',
+              text: 'Features',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'The editor supports various formatting options including:',
+            },
+          ],
+        },
+        {
+          type: 'bulletListItem',
+          content: [
+            {
+              type: 'text',
+              text: 'Bold and italic text',
+            },
+          ],
+        },
+        {
+          type: 'bulletListItem',
+          content: [
+            {
+              type: 'text',
+              text: 'Headings and subheadings',
+            },
+          ],
+        },
+        {
+          type: 'bulletListItem',
+          content: [
+            {
+              type: 'text',
+              text: 'Lists and bullet points',
+            },
+          ],
+        },
+      ]),
+      description: 'A sample document showcasing editor features',
+      tags: 'sample,document,features',
+      userId: testUser.id,
+    },
+  });
+
+  console.log('✅ Test pages created:', {
+    page1: testPage1.title,
+    page2: testPage2.title,
+  });
+
   console.log('🎉 Database seeded successfully!');
   console.log('\n📝 Test credentials:');
   console.log('Username: testuser | Password: password123');

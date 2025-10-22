@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
       include: {
         children: true,
         parent: true,
+        user: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -70,6 +71,7 @@ export async function POST(request: NextRequest) {
       include: {
         children: true,
         parent: true,
+        user: true,
       },
     });
 
@@ -131,6 +133,7 @@ export async function PUT(request: NextRequest) {
       include: {
         children: true,
         parent: true,
+        user: true,
       },
     });
 

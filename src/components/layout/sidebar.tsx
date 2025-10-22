@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ 
-  pages = [], 
+  pages, 
   onCreatePage, 
   onEditPage, 
   onDeletePage 
@@ -43,6 +43,32 @@ export function Sidebar({
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedPages, setExpandedPages] = useState<Set<string>>(new Set());
   const [showContextMenu, setShowContextMenu] = useState<string | null>(null);
+  const [fetchedPages, setFetchedPages] = useState<Page[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch pages from API
+  useEffect(() => {
+    const fetchPages = async () => {
+      try {
+        const response = await fetch('/api/pages');
+        if (response.ok) {
+          const data = await response.json();
+          const pagesData = data.pages.map((page: any) => ({
+            id: page.id,
+            title: page.title,
+            children: []
+          }));
+          setFetchedPages(pagesData);
+        }
+      } catch (error) {
+        console.error('Error fetching pages:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPages();
+  }, []);
 
   const handleCreatePage = () => {
     if (onCreatePage) {
@@ -52,39 +78,21 @@ export function Sidebar({
     }
   };
 
-  // Mock data for demonstration
+  // Mock data for demonstration (fallback)
   const mockPages: Page[] = [
     {
-      id: '1',
-      title: 'Getting Started',
-      children: [
-        { id: '1-1', title: 'Welcome to PagesAI' },
-        { id: '1-2', title: 'First Steps' },
-        { id: '1-3', title: 'Basic Features' }
-      ]
+      id: 'test-page-1',
+      title: 'Welcome to PagesAI',
+      children: []
     },
     {
-      id: '2',
-      title: 'Documentation',
-      children: [
-        { id: '2-1', title: 'API Reference' },
-        { id: '2-2', title: 'User Guide' },
-        { id: '2-3', title: 'Troubleshooting' }
-      ]
-    },
-    {
-      id: '3',
-      title: 'Projects',
-      children: [
-        { id: '3-1', title: 'Project Alpha' },
-        { id: '3-2', title: 'Project Beta' }
-      ]
-    },
-    { id: '4', title: 'Personal Notes' },
-    { id: '5', title: 'Meeting Notes' }
+      id: 'test-page-2',
+      title: 'Sample Document',
+      children: []
+    }
   ];
 
-  const displayPages = pages.length > 0 ? pages : mockPages;
+  const displayPages = pages || fetchedPages.length > 0 ? (pages || fetchedPages) : mockPages;
 
   const toggleExpanded = (pageId: string) => {
     const newExpanded = new Set(expandedPages);
@@ -227,7 +235,12 @@ export function Sidebar({
 
       {/* Pages List */}
       <div className="flex-1 overflow-y-auto p-2">
-        {filteredPages.length > 0 ? (
+        {isLoading ? (
+          <div className="text-center py-8 text-gray-500">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900 mx-auto mb-2"></div>
+            <p className="text-sm">Loading pages...</p>
+          </div>
+        ) : filteredPages.length > 0 ? (
           <div className="space-y-1">
             {filteredPages.map(page => renderPage(page))}
           </div>

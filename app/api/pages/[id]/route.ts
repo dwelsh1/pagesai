@@ -29,6 +29,7 @@ export async function GET(
       include: {
         children: true,
         parent: true,
+        user: true,
       },
     });
 
@@ -106,6 +107,7 @@ export async function PUT(
       include: {
         children: true,
         parent: true,
+        user: true,
       },
     });
 

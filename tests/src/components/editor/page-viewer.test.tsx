@@ -4,7 +4,7 @@ import { PageViewer } from '@/components/editor/page-viewer';
 
 // Mock BlockNote components
 vi.mock('@blocknote/react', () => ({
-  BlockNoteView: vi.fn(({ editor }) => (
+  BlockNoteViewEditor: vi.fn(({ editor }) => (
     <div data-testid="blocknote-viewer">Mock Viewer</div>
   )),
 }));

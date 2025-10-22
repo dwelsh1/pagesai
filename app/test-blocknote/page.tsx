@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
-import { BlockNoteViewEditor, BlockNoteContext } from '@blocknote/react';
+import { BlockNoteDefaultUI, BlockNoteContext } from '@blocknote/react';
 import dynamic from 'next/dynamic';
 
 const schema = BlockNoteSchema.create({
@@ -55,11 +55,10 @@ function DirectBlockNoteTest() {
 
   return (
     <div className="p-4 border rounded">
-      <h3 className="text-lg font-semibold mb-2">Test 1: Direct Import</h3>
+      <h3 className="text-lg font-semibold mb-2">Test 1: Direct Import with BlockNoteDefaultUI</h3>
       <BlockNoteContext.Provider value={editor}>
-        <BlockNoteViewEditor
+        <BlockNoteDefaultUI
           editor={editor}
-          editable={true}
           className="min-h-[200px] border rounded p-2"
         />
       </BlockNoteContext.Provider>
@@ -71,7 +70,7 @@ function DirectBlockNoteTest() {
 const DynamicBlockNoteTest = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: () => {
-      const { BlockNoteViewEditor, BlockNoteContext } = mod;
+      const { BlockNoteDefaultUI, BlockNoteContext } = mod;
       const [editor, setEditor] = useState<any>(null);
 
       useEffect(() => {
@@ -114,11 +113,10 @@ const DynamicBlockNoteTest = dynamic(
 
       return (
         <div className="p-4 border rounded">
-          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic Import</h3>
+          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic Import with BlockNoteDefaultUI</h3>
           <BlockNoteContext.Provider value={editor}>
-            <BlockNoteViewEditor
+            <BlockNoteDefaultUI
               editor={editor}
-              editable={true}
               className="min-h-[200px] border rounded p-2"
             />
           </BlockNoteContext.Provider>

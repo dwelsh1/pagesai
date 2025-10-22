@@ -4,13 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { 
   Plus, 
   FileText, 
   Folder, 
   FolderOpen, 
-  Search, 
   ChevronRight, 
   ChevronDown,
   MoreHorizontal,
@@ -41,7 +39,6 @@ export function Sidebar({
 }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [searchQuery, setSearchQuery] = useState('');
   const [expandedPages, setExpandedPages] = useState<Set<string>>(new Set());
   const [showContextMenu, setShowContextMenu] = useState<string | null>(null);
   const [fetchedPages, setFetchedPages] = useState<Page[]>([]);
@@ -51,6 +48,9 @@ export function Sidebar({
   const currentPageId = pathname.includes('/dashboard/page/') 
     ? pathname.split('/dashboard/page/')[1]?.split('/')[0]
     : null;
+
+  console.log('📱 Sidebar: Current pathname:', pathname);
+  console.log('📱 Sidebar: Current pageId:', currentPageId);
 
   // Fetch pages from API
   useEffect(() => {
@@ -109,13 +109,6 @@ export function Sidebar({
     }
     setExpandedPages(newExpanded);
   };
-
-  const filteredPages = displayPages.filter(page =>
-    page.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    page.children?.some(child => 
-      child.title.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
 
   const renderPage = (page: Page, level = 0) => {
     const hasChildren = page.children && page.children.length > 0;
@@ -220,7 +213,7 @@ export function Sidebar({
     <aside className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-gray-900">Pages</h2>
           <Button
             variant="ghost"
@@ -232,18 +225,6 @@ export function Sidebar({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-3 w-3" />
-          <Input
-            type="text"
-            placeholder="Search pages..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-7 h-8 text-xs bg-white border-gray-200 focus:bg-white"
-          />
-        </div>
       </div>
 
       {/* Pages List */}
@@ -253,17 +234,14 @@ export function Sidebar({
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900 mx-auto mb-2"></div>
             <p className="text-sm">Loading pages...</p>
           </div>
-        ) : filteredPages.length > 0 ? (
+        ) : displayPages.length > 0 ? (
           <div className="space-y-1">
-            {filteredPages.map(page => renderPage(page))}
+            {displayPages.map(page => renderPage(page))}
           </div>
         ) : (
           <div className="text-center py-8 text-gray-500">
             <FileText className="h-8 w-8 mx-auto mb-2 text-gray-300" />
             <p className="text-sm">No pages found</p>
-            {searchQuery && (
-              <p className="text-xs mt-1">Try a different search term</p>
-            )}
           </div>
         )}
       </div>

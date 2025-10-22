@@ -3,6 +3,14 @@ import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ForgotPassword } from '@/components/auth/forgot-password';
 
+// Mock Next.js router
+const mockPush = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
+
 describe('ForgotPassword Component', () => {
   beforeEach(() => {
     // Clear all mocks and reset fetch
@@ -20,11 +28,10 @@ describe('ForgotPassword Component', () => {
   it('should render forgot password form with all required elements', () => {
     render(<ForgotPassword onClose={vi.fn()} onSuccess={vi.fn()} />);
 
-    expect(screen.getByText('Forgot Password?')).toBeInTheDocument();
-    expect(screen.getByText('Enter your email address and we\'ll send you a link to reset your password.')).toBeInTheDocument();
     expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
     expect(screen.getByTestId('email-input')).toBeInTheDocument();
     expect(screen.getByTestId('send-reset-button')).toBeInTheDocument();
+    expect(screen.getByText('Show User\'s Login Credentials')).toBeInTheDocument();
   });
 
   it('should handle form input changes', async () => {

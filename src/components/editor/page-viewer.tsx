@@ -1,49 +1,8 @@
 'use client';
 
-import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
-import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
-
-const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-  },
-});
-
-
-// Dynamic import for BlockNote editor to avoid SSR issues
-const BlockNoteEditor = dynamic(
-  () => import('@blocknote/react').then((mod) => ({ 
-    default: ({ editor, onContentChange, editable, className }: any) => {
-      // Debug: log available exports
-      console.log('Available exports from @blocknote/react:', Object.keys(mod));
-      
-      // Try different component names
-      const Component = mod.BlockNoteView || mod.BlockNoteViewEditor || mod.BlockNoteDefaultUI;
-      
-      if (!Component) {
-        console.error('No valid BlockNote component found');
-        return <div className="text-red-500 p-4">BlockNote component not found</div>;
-      }
-      
-      return (
-        <Component
-          editor={editor}
-          onContentChange={onContentChange}
-          editable={editable}
-          className={className}
-        />
-      );
-    }
-  })),
-  { 
-    ssr: false,
-    loading: () => <div className="animate-pulse bg-gray-200 h-64 rounded"></div>
-  }
-);
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Save, AlertCircle } from 'lucide-react';
+import { TipTapEditor } from '@/components/editor/tiptap-editor';
 
 interface PageViewerProps {
   pageId: string;
@@ -63,47 +22,29 @@ interface PageData {
 }
 
 // Client-side only editor component with auto-save
-function ClientBlockNoteEditor({ content, pageId }: { content: string; pageId: string }) {
-  const [editor, setEditor] = useState<any>(null);
+function ClientTipTapEditor({ content, pageId }: { content: string; pageId: string }) {
+  
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error' | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-  useEffect(() => {
-    const initEditor = async () => {
-      const { BlockNoteEditor } = await import('@blocknote/core');
-      
-      const newEditor = BlockNoteEditor.create({
-        schema,
-        initialContent: content ? JSON.parse(content) : undefined,
-      });
-      
-      // Set editor as editable (new way)
-      newEditor.isEditable = true;
-      
-      setEditor(newEditor);
-    };
-
-    initEditor();
-  }, [content]);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-save functionality with debouncing
-  const autoSave = useCallback(async () => {
-    if (!editor || !hasUnsavedChanges) return;
+  const autoSave = useCallback(async (newContent: string) => {
+    if (!hasUnsavedChanges) return;
 
     setIsSaving(true);
     setSaveStatus('saving');
 
     try {
-      const currentContent = JSON.stringify(editor.document);
-      
       const response = await fetch(`/api/pages/${pageId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
-          content: currentContent,
+          content: newContent,
         }),
       });
 
@@ -125,29 +66,25 @@ function ClientBlockNoteEditor({ content, pageId }: { content: string; pageId: s
     } finally {
       setIsSaving(false);
     }
-  }, [editor, hasUnsavedChanges, pageId]);
+  }, [hasUnsavedChanges, pageId]);
 
-  // Debounced auto-save
-  useEffect(() => {
-    if (!hasUnsavedChanges) return;
 
-    const timeoutId = setTimeout(() => {
-      autoSave();
-    }, 2000); // Save after 2 seconds of inactivity
-
-    return () => clearTimeout(timeoutId);
-  }, [hasUnsavedChanges, autoSave]);
-
-  const handleContentChange = useCallback(() => {
+  const handleContentUpdate = useCallback((newContent: string) => {
     setHasUnsavedChanges(true);
-  }, []);
-
-  if (!editor) {
-    return <div className="animate-pulse bg-gray-200 h-64 rounded"></div>;
-  }
+    
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    // Debounced auto-save
+    timeoutRef.current = setTimeout(() => {
+      autoSave(newContent);
+    }, 2000);
+  }, [autoSave]);
 
   return (
-    <div className="relative">
+    <div className="relative h-full w-full">
       {/* Save status indicator */}
       {saveStatus && (
         <div className="absolute top-4 right-4 z-10">
@@ -172,18 +109,18 @@ function ClientBlockNoteEditor({ content, pageId }: { content: string; pageId: s
         </div>
       )}
       
-      <BlockNoteEditor 
-        editor={editor} 
-        onContentChange={handleContentChange}
+      <TipTapEditor
+        content={content}
+        onUpdate={handleContentUpdate}
         editable={true}
-        className="prose max-w-none min-h-[500px] focus:outline-none"
+        className="h-full w-full focus:outline-none"
       />
     </div>
   );
 }
 
 export function PageViewer({ pageId }: PageViewerProps) {
-  const router = useRouter();
+  
   const [page, setPage] = useState<PageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -197,7 +134,9 @@ export function PageViewer({ pageId }: PageViewerProps) {
   useEffect(() => {
     const fetchPage = async () => {
       try {
-        const response = await fetch(`/api/pages/${pageId}`);
+        const response = await fetch(`/api/pages/${pageId}`, {
+          credentials: 'include',
+        });
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -221,10 +160,6 @@ export function PageViewer({ pageId }: PageViewerProps) {
     fetchPage();
   }, [pageId]);
 
-  const handleBack = () => {
-    router.push('/dashboard');
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -241,39 +176,18 @@ export function PageViewer({ pageId }: PageViewerProps) {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Error</h2>
-          <p className="text-gray-600 mb-4">{error || 'Page not found'}</p>
-          <Button onClick={handleBack}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
+          <p className="text-gray-600">{error || 'Page not found'}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Minimal header with just back button */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <Button
-          onClick={handleBack}
-          variant="outline"
-          size="sm"
-          title="Back to dashboard"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
-        <h1 className="text-xl font-semibold text-gray-900 truncate">
-          {page.title}
-        </h1>
-        <div className="w-20"></div> {/* Spacer for centering */}
-      </div>
-
-      {/* Full-height content area */}
-      <div className="flex-1 p-6 overflow-auto">
+    <div className="h-full w-full bg-white">
+      {/* Full-height content area with white background - no internal header */}
+      <div className="h-full w-full">
         {isClient && page ? (
-          <ClientBlockNoteEditor content={page.content} pageId={pageId} />
+          <ClientTipTapEditor content={page.content} pageId={pageId} />
         ) : (
           <div className="animate-pulse bg-gray-200 h-64 rounded"></div>
         )}

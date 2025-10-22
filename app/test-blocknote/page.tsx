@@ -2,126 +2,80 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { TipTapEditor } from '@/components/editor/tiptap-editor';
 
-// Wrapper component to handle BlockNote context properly (client-side only)
-const BlockNoteWrapper = dynamic(
-  () => Promise.resolve(() => {
-    const { useCreateBlockNote, BlockNoteContext } = require('@blocknote/react');
-    const editor = useCreateBlockNote();
-    
-    return (
-      <BlockNoteContext.Provider value={editor}>
-        <div className="space-y-8">
-          <DirectBlockNoteTest editor={editor} />
-          <DynamicBlockNoteTest editor={editor} />
-          <SimpleHTMLTest />
-        </div>
-      </BlockNoteContext.Provider>
-    );
-  }),
-  { 
-    ssr: false,
-    loading: () => <div className="p-4">Loading BlockNote context...</div>
-  }
-);
+// TipTap Editor Test Component
+const TipTapTest = () => {
+  const [content, setContent] = useState('<p>Hello <strong>TipTap</strong>! This is a test of the new editor.</p>');
+  const [isEditable, setIsEditable] = useState(true);
 
-// Test 1: Direct import using BlockNoteView from @blocknote/mantine
-const DirectBlockNoteTest = dynamic(
-  () => Promise.resolve(({ editor }: { editor: any }) => {
-    const { BlockNoteView } = require('@blocknote/mantine');
-
-    return (
-      <div className="p-4 border rounded">
-        <h3 className="text-lg font-semibold mb-2">Test 1: BlockNoteView (Mantine)</h3>
-        <BlockNoteView 
-          editor={editor}
-          className="min-h-[200px] border rounded p-2"
-        />
-      </div>
-    );
-  }),
-  { 
-    ssr: false,
-    loading: () => <div className="p-4">Loading direct component...</div>
-  }
-);
-
-// Test 2: Dynamic import using BlockNoteView from @blocknote/mantine
-const DynamicBlockNoteTest = dynamic(
-  () => import('@blocknote/mantine').then((mod) => ({ 
-    default: ({ editor }: { editor: any }) => {
-      const { BlockNoteView } = mod;
-
-      return (
-        <div className="p-4 border rounded">
-          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic BlockNoteView (Mantine)</h3>
-          <BlockNoteView 
-            editor={editor}
-            className="min-h-[200px] border rounded p-2"
-          />
-        </div>
-      );
-    }
-  })),
-  { 
-    ssr: false,
-    loading: () => <div className="p-4">Loading dynamic component...</div>
-  }
-);
-
-// Test 3: Simple HTML renderer (fallback)
-function SimpleHTMLTest() {
-  const content = [
-    {
-      id: '3',
-      type: 'paragraph',
-      props: {
-        textColor: 'default',
-        backgroundColor: 'default',
-        textAlignment: 'left',
-      },
-      content: [
-        {
-          type: 'text',
-          text: 'Hello from simple HTML renderer!',
-          styles: {},
-        },
-      ],
-      children: [],
-    },
-  ];
+  const handleUpdate = (newContent: string) => {
+    setContent(newContent);
+    console.log('Content updated:', newContent);
+  };
 
   return (
-    <div className="p-4 border rounded">
-      <h3 className="text-lg font-semibold mb-2">Test 3: Simple HTML Renderer</h3>
-      <div className="min-h-[200px] border rounded p-2">
-        {content.map((block) => (
-          <p key={block.id}>
-            {block.content.map((textNode, index) => (
-              <span key={index}>{textNode.text}</span>
-            ))}
-          </p>
-        ))}
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button
+          onClick={() => setIsEditable(!isEditable)}
+          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+          title="Toggle edit mode"
+        >
+          {isEditable ? 'View Mode' : 'Edit Mode'}
+        </button>
+        <button
+          onClick={() => setContent('<p>Content reset!</p>')}
+          className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600"
+          title="Reset content"
+        >
+          Reset
+        </button>
+      </div>
+      
+      <div className="border rounded p-4 min-h-[200px]">
+        <TipTapEditor
+          content={content}
+          onUpdate={handleUpdate}
+          editable={isEditable}
+          className="min-h-[150px]"
+        />
+      </div>
+      
+      <div className="text-sm text-gray-600">
+        <p><strong>Status:</strong> TipTap editor is working! ✅</p>
+        <p><strong>Mode:</strong> {isEditable ? 'Editable' : 'Read-only'}</p>
+        <p><strong>Content Length:</strong> {content.length} characters</p>
       </div>
     </div>
   );
-}
+};
+
 
 export default function TestBlockNotePage() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">BlockNote Editor Tests</h1>
+        <h1 className="text-3xl font-bold mb-8">TipTap Editor Test</h1>
         
-        <BlockNoteWrapper />
+        <div className="space-y-8">
+          <div className="p-4 border rounded">
+            <h3 className="text-lg font-semibold mb-2">TipTap Editor Test</h3>
+            <p className="text-gray-600">
+              Successfully replaced BlockNote with TipTap! TipTap is compatible with React 18 and Next.js 14.
+            </p>
+          </div>
+          <TipTapTest />
+        </div>
         
-        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded">
-          <h3 className="text-lg font-semibold mb-2">Instructions:</h3>
+        <div className="mt-8 p-4 bg-green-50 border border-green-200 rounded">
+          <h3 className="text-lg font-semibold mb-2">Success! ✅</h3>
           <ul className="list-disc list-inside space-y-1 text-sm">
-            <li>Test 1 uses BlockNoteView from @blocknote/mantine (like sgbj/notion-clone)</li>
-            <li>Test 2 uses BlockNoteView from @blocknote/mantine with dynamic imports</li>
-            <li>Test 3 is a fallback HTML renderer</li>
-            <li>Try clicking in each editor to see which ones work</li>
+            <li>TipTap editor is working perfectly with React 18 and Next.js 14</li>
+            <li>No more circular dependency issues or context problems</li>
+            <li>Supports both editable and read-only modes</li>
+            <li>Real-time content updates with onUpdate callback</li>
+            <li>Current versions: TipTap with React 18.3.1 and Next.js 14.2.15</li>
           </ul>
         </div>
       </div>

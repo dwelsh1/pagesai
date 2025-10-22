@@ -7,6 +7,14 @@ import { ZodError } from 'zod';
 // Mock fetch
 global.fetch = vi.fn();
 
+// Mock Next.js router
+const mockPush = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
+
 describe('LoginForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -83,7 +91,7 @@ describe('LoginForm', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Login Successful!')).toBeInTheDocument();
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });
 
@@ -163,7 +171,7 @@ describe('LoginForm', () => {
     });
   });
 
-  it('should close success modal when continue button is clicked', async () => {
+  it('should redirect to dashboard on successful login', async () => {
     const user = userEvent.setup();
     const mockResponse = {
       ok: true,
@@ -182,14 +190,7 @@ describe('LoginForm', () => {
     await user.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Login Successful!')).toBeInTheDocument();
-    });
-
-    const continueButton = screen.getByText('Continue');
-    await user.click(continueButton);
-
-    await waitFor(() => {
-      expect(screen.queryByText('Login Successful!')).not.toBeInTheDocument();
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { MainLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
@@ -87,37 +87,38 @@ export default function DiagnosticsPage() {
   const [logs, setLogs] = useState<any[]>([]);
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [showClearAuthDialog, setShowClearAuthDialog] = useState(false);
+  const logsRef = useRef<any[]>([]);
 
-  // Capture console logs
+  // Capture console logs - simplified approach
   useEffect(() => {
     const originalLog = console.log;
     const originalError = console.error;
     const originalWarn = console.warn;
 
     console.log = (...args) => {
-      setLogs(prev => [...prev.slice(-99), { 
+      logsRef.current = [...logsRef.current.slice(-99), { 
         type: 'log', 
         message: args.join(' '), 
         timestamp: new Date().toISOString() 
-      }]);
+      }];
       originalLog(...args);
     };
 
     console.error = (...args) => {
-      setLogs(prev => [...prev.slice(-99), { 
+      logsRef.current = [...logsRef.current.slice(-99), { 
         type: 'error', 
         message: args.join(' '), 
         timestamp: new Date().toISOString() 
-      }]);
+      }];
       originalError(...args);
     };
 
     console.warn = (...args) => {
-      setLogs(prev => [...prev.slice(-99), { 
+      logsRef.current = [...logsRef.current.slice(-99), { 
         type: 'warn', 
         message: args.join(' '), 
         timestamp: new Date().toISOString() 
-      }]);
+      }];
       originalWarn(...args);
     };
 
@@ -126,6 +127,15 @@ export default function DiagnosticsPage() {
       console.error = originalError;
       console.warn = originalWarn;
     };
+  }, []);
+
+  // Update logs state periodically instead of on every log
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLogs([...logsRef.current]);
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchDiagnostics = async () => {

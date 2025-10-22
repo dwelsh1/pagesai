@@ -2,14 +2,13 @@
 
 import { MainLayout } from '@/components/layout';
 import { PageViewer } from '@/components/editor/page-viewer';
-import { use } from 'react';
 
 interface ViewPagePageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default function ViewPagePage({ params }: ViewPagePageProps) {
-  const { id } = use(params);
+  const { id } = params;
   
   return (
     <MainLayout>

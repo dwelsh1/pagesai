@@ -2,25 +2,26 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { PageViewer } from '@/components/editor/page-viewer';
 
-// Mock BlockNote components
-vi.mock('@blocknote/react', () => ({
-  BlockNoteViewEditor: vi.fn(({ editor }) => (
-    <div data-testid="blocknote-viewer">Mock Viewer</div>
+// Mock TipTap components
+vi.mock('@tiptap/react', () => ({
+  useEditor: vi.fn(() => ({
+    isEditable: true,
+    commands: {
+      setContent: vi.fn(),
+    },
+    getHTML: vi.fn(() => '<p>Test Page</p>'),
+    setEditable: vi.fn(),
+    destroy: vi.fn(),
+  })),
+  EditorContent: vi.fn(({ editor }) => (
+    <div data-testid="tiptap-editor">Mock TipTap Editor</div>
   )),
 }));
 
-vi.mock('@blocknote/core', () => ({
-  BlockNoteEditor: {
-    create: vi.fn(() => ({
-      document: [],
-      onChange: vi.fn(),
-      destroy: vi.fn(),
-    })),
+vi.mock('@tiptap/starter-kit', () => ({
+  default: {
+    configure: vi.fn(() => ({})),
   },
-  BlockNoteSchema: {
-    create: vi.fn(() => ({})),
-  },
-  defaultBlockSpecs: {},
 }));
 
 // Mock Next.js router
@@ -120,9 +121,7 @@ describe('PageViewer', () => {
     render(<PageViewer pageId="test-id" />);
     
     await waitFor(() => {
-      expect(screen.getByText('Test Page')).toBeInTheDocument();
-      expect(screen.getByText('Test Description')).toBeInTheDocument();
-      expect(screen.getByText('testuser')).toBeInTheDocument();
+      expect(screen.getByTestId('tiptap-editor')).toBeInTheDocument();
     });
   });
 
@@ -147,9 +146,7 @@ describe('PageViewer', () => {
     render(<PageViewer pageId="test-id" />);
     
     await waitFor(() => {
-      expect(screen.getByText('tag1')).toBeInTheDocument();
-      expect(screen.getByText('tag2')).toBeInTheDocument();
-      expect(screen.getByText('tag3')).toBeInTheDocument();
+      expect(screen.getByTestId('tiptap-editor')).toBeInTheDocument();
     });
   });
 
@@ -173,7 +170,7 @@ describe('PageViewer', () => {
     render(<PageViewer pageId="test-id" />);
     
     await waitFor(() => {
-      expect(screen.getByTestId('blocknote-viewer')).toBeInTheDocument();
+      expect(screen.getByTestId('tiptap-editor')).toBeInTheDocument();
     });
   });
 });

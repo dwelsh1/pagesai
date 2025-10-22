@@ -14,6 +14,15 @@ vi.mock('next/navigation', () => ({
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
+// Mock window.location
+const mockLocation = {
+  href: '',
+};
+Object.defineProperty(window, 'location', {
+  value: mockLocation,
+  writable: true,
+});
+
 describe('useAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -79,11 +88,11 @@ describe('useAuth', () => {
 
     const { result } = renderHook(() => useAuth());
 
-    await act(async () => {
-      await result.current.login(credentials);
+    const loginResult = await act(async () => {
+      return await result.current.login(credentials.username, credentials.password);
     });
 
-    expect(mockPush).toHaveBeenCalledWith('/dashboard');
+    expect(loginResult.success).toBe(true);
     expect(result.current.user).toEqual(mockUser);
   });
 
@@ -93,6 +102,12 @@ describe('useAuth', () => {
       password: 'wrongpassword',
     };
 
+    // Mock initial auth check
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+    });
+
+    // Mock failed login
     mockFetch.mockResolvedValueOnce({
       ok: false,
       json: async () => ({ error: 'Invalid credentials' }),
@@ -100,11 +115,17 @@ describe('useAuth', () => {
 
     const { result } = renderHook(() => useAuth());
 
-    await expect(
-      act(async () => {
-        await result.current.login(credentials);
-      })
-    ).rejects.toThrow('Invalid credentials');
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    const loginResult = await act(async () => {
+      return await result.current.login(credentials.username, credentials.password);
+    });
+
+    expect(loginResult.success).toBe(false);
+    expect(loginResult.error).toBe('Invalid credentials');
+    expect(result.current.user).toBeNull();
   });
 
   it('should handle logout successfully', async () => {
@@ -135,7 +156,7 @@ describe('useAuth', () => {
       await result.current.logout();
     });
 
-    expect(mockPush).toHaveBeenCalledWith('/login');
+    expect(mockLocation.href).toBe('/login');
     expect(result.current.user).toBeNull();
   });
 
@@ -152,17 +173,12 @@ describe('useAuth', () => {
       password: 'password123',
     };
 
-    // Mock registration API call
+    // Mock initial auth check
     mockFetch.mockResolvedValueOnce({
-      ok: true,
+      ok: false,
     });
 
-    // Mock login after registration
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-    });
-
-    // Mock user fetch after login
+    // Mock successful registration
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ user: mockUser }),
@@ -170,10 +186,15 @@ describe('useAuth', () => {
 
     const { result } = renderHook(() => useAuth());
 
-    await act(async () => {
-      await result.current.register(registrationData);
+    const registerResult = await act(async () => {
+      return await result.current.register(
+        registrationData.username,
+        registrationData.password,
+        registrationData.email
+      );
     });
 
+    expect(registerResult.success).toBe(true);
     expect(result.current.user).toEqual(mockUser);
   });
 
@@ -184,6 +205,12 @@ describe('useAuth', () => {
       password: 'password123',
     };
 
+    // Mock initial auth check
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+    });
+
+    // Mock failed registration
     mockFetch.mockResolvedValueOnce({
       ok: false,
       json: async () => ({ error: 'Username already exists' }),
@@ -191,11 +218,21 @@ describe('useAuth', () => {
 
     const { result } = renderHook(() => useAuth());
 
-    await expect(
-      act(async () => {
-        await result.current.register(registrationData);
-      })
-    ).rejects.toThrow('Username already exists');
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    const registerResult = await act(async () => {
+      return await result.current.register(
+        registrationData.username,
+        registrationData.password,
+        registrationData.email
+      );
+    });
+
+    expect(registerResult.success).toBe(false);
+    expect(registerResult.error).toBe('Username already exists');
+    expect(result.current.user).toBeNull();
   });
 
   it('should check auth status', async () => {

@@ -9,12 +9,14 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({
     push: mockPush,
   }),
+  usePathname: () => '/dashboard/page/test-page',
 }));
 
 // Mock the useAuth hook
 const mockLogout = vi.fn();
 vi.mock('@/hooks/use-auth', () => ({
   useAuth: () => ({
+    user: { username: 'testuser', email: 'test@example.com' },
     logout: mockLogout,
   }),
 }));
@@ -42,24 +44,25 @@ describe('Header', () => {
 
     expect(screen.getByText('PagesAI')).toBeInTheDocument();
     expect(screen.getByText('P')).toBeInTheDocument(); // Logo text
-    expect(screen.getByPlaceholderText('Search pages...')).toBeInTheDocument();
+    expect(screen.getAllByPlaceholderText('Search pages...')).toHaveLength(2); // Desktop and mobile
   });
 
-  it('should render settings and sign out buttons', () => {
+  it('should render settings and user dropdown', () => {
     render(<Header />);
 
-    expect(screen.getByText('Settings')).toBeInTheDocument();
-    expect(screen.getByText('Sign out')).toBeInTheDocument();
+    expect(screen.getByTitle('Settings')).toBeInTheDocument();
+    expect(screen.getByTitle('User menu')).toBeInTheDocument(); // User dropdown button
   });
 
   it('should handle search form submission', async () => {
     const user = userEvent.setup();
     render(<Header />);
 
-    const searchInput = screen.getByPlaceholderText('Search pages...');
-    const searchForm = searchInput.closest('form');
+    const searchInputs = screen.getAllByPlaceholderText('Search pages...');
+    const desktopSearchInput = searchInputs[0]; // Desktop search input
+    const searchForm = desktopSearchInput.closest('form');
 
-    await user.type(searchInput, 'test search');
+    await user.type(desktopSearchInput, 'test search');
     await user.click(searchForm!);
 
     // Should not navigate since search functionality is not implemented
@@ -70,7 +73,12 @@ describe('Header', () => {
     const user = userEvent.setup();
     render(<Header />);
 
-    const signOutButton = screen.getByText('Sign out');
+    // Click on user dropdown to open it
+    const userButton = screen.getByTitle('User menu');
+    await user.click(userButton);
+
+    // Look for sign out option in dropdown
+    const signOutButton = screen.getByText('Signout');
     await user.click(signOutButton);
 
     expect(mockLogout).toHaveBeenCalledTimes(1);
@@ -80,10 +88,10 @@ describe('Header', () => {
     render(<Header />);
 
     const settingsButton = screen.getByTitle('Settings');
-    const signOutButton = screen.getByTitle('Sign out');
+    const userButton = screen.getByTitle('User menu');
 
     expect(settingsButton).toBeInTheDocument();
-    expect(signOutButton).toBeInTheDocument();
+    expect(userButton).toBeInTheDocument();
   });
 
   it('should render mobile menu buttons', () => {

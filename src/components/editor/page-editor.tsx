@@ -1,20 +1,12 @@
 'use client';
 
-import { BlockNoteViewEditor, BlockNoteContext } from '@blocknote/react';
-import { BlockNoteEditor, BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Save, X, FileText } from 'lucide-react';
-
-// Define the schema for our editor
-const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-  },
-});
+import { TipTapEditor } from '@/components/editor/tiptap-editor';
 
 interface PageEditorProps {
   pageId?: string;
@@ -37,66 +29,36 @@ export function PageEditor({
 }: PageEditorProps) {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
-  const [editor, setEditor] = useState<BlockNoteEditor | null>(null);
+  const [content, setContent] = useState(initialContent);
   const [isSaving, setIsSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Initialize the editor
-  useEffect(() => {
-    const initializeEditor = async () => {
-      const newEditor = BlockNoteEditor.create({
-        schema,
-        initialContent: initialContent ? JSON.parse(initialContent) : undefined,
-      });
-
-      setEditor(newEditor);
-
-      // Listen for content changes
-      newEditor.onChange(() => {
-        setHasUnsavedChanges(true);
-      });
-    };
-
-    initializeEditor();
-
-    return () => {
-      if (editor) {
-        editor.destroy();
-      }
-    };
-  }, []);
-
   // Auto-save functionality
   const autoSave = useCallback(async () => {
-    if (!editor || !hasUnsavedChanges) return;
+    if (!hasUnsavedChanges || !pageId) return;
 
     try {
-      const content = JSON.stringify(editor.document);
-      
-      if (pageId) {
-        // Update existing page
-        const response = await fetch(`/api/pages/${pageId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title,
-            content,
-            description,
-          }),
-        });
+      const response = await fetch(`/api/pages/${pageId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          description,
+        }),
+      });
 
-        if (!response.ok) {
-          throw new Error('Failed to auto-save');
-        }
+      if (!response.ok) {
+        throw new Error('Failed to auto-save');
       }
       
       setHasUnsavedChanges(false);
     } catch (error) {
       console.error('Auto-save failed:', error);
     }
-  }, [editor, hasUnsavedChanges, pageId, title, description]);
+  }, [hasUnsavedChanges, pageId, title, content, description]);
 
   // Auto-save every 30 seconds
   useEffect(() => {
@@ -106,13 +68,14 @@ export function PageEditor({
     return () => clearInterval(interval);
   }, [autoSave, hasUnsavedChanges]);
 
-  const handleSave = async () => {
-    if (!editor) return;
+  const handleContentUpdate = useCallback((newContent: string) => {
+    setContent(newContent);
+    setHasUnsavedChanges(true);
+  }, []);
 
+  const handleSave = async () => {
     setIsSaving(true);
     try {
-      const content = JSON.stringify(editor.document);
-      
       if (onSave) {
         await onSave({
           title,
@@ -180,17 +143,6 @@ export function PageEditor({
       window.history.back();
     }
   };
-
-  if (!editor) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading editor...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -267,14 +219,13 @@ export function PageEditor({
           <CardTitle>Content</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="min-h-[500px] border rounded-lg">
-            <BlockNoteContext.Provider value={editor}>
-              <BlockNoteViewEditor
-                editor={editor}
-                theme="light"
-                className="prose max-w-none"
-              />
-            </BlockNoteContext.Provider>
+          <div className="min-h-[500px] border rounded-lg p-4">
+            <TipTapEditor
+              content={content}
+              onUpdate={handleContentUpdate}
+              editable={true}
+              className="prose max-w-none min-h-[400px]"
+            />
           </div>
         </CardContent>
       </Card>

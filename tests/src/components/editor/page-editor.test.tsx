@@ -2,18 +2,26 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { PageEditor } from '@/components/editor/page-editor';
 
-// Mock BlockNote components
-vi.mock('@blocknote/react', () => ({
-  BlockNoteEditor: {
-    create: vi.fn(() => ({
-      document: [],
-      onChange: vi.fn(),
-      destroy: vi.fn(),
-    })),
-  },
-  BlockNoteViewEditor: vi.fn(({ editor }) => (
-    <div data-testid="blocknote-editor">Mock Editor</div>
+// Mock TipTap components
+vi.mock('@tiptap/react', () => ({
+  useEditor: vi.fn(() => ({
+    isEditable: true,
+    commands: {
+      setContent: vi.fn(),
+    },
+    getHTML: vi.fn(() => '<p>Test content</p>'),
+    setEditable: vi.fn(),
+    destroy: vi.fn(),
+  })),
+  EditorContent: vi.fn(({ editor }) => (
+    <div data-testid="tiptap-editor">Mock TipTap Editor</div>
   )),
+}));
+
+vi.mock('@tiptap/starter-kit', () => ({
+  default: {
+    configure: vi.fn(() => ({})),
+  },
 }));
 
 // Mock Next.js router
@@ -135,14 +143,14 @@ describe('PageEditor', () => {
   it('shows loading state initially', () => {
     render(<PageEditor />);
     
-    expect(screen.getByText('Loading editor...')).toBeInTheDocument();
+    expect(screen.getByTestId('tiptap-editor')).toBeInTheDocument();
   });
 
   it('renders editor after loading', async () => {
     render(<PageEditor />);
     
     await waitFor(() => {
-      expect(screen.getByTestId('blocknote-editor')).toBeInTheDocument();
+      expect(screen.getByTestId('tiptap-editor')).toBeInTheDocument();
     });
   });
 });

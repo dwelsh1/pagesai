@@ -3,6 +3,21 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DiagnosticsPage from '../../../app/diagnostics/page';
 
+// Mock MainLayout to avoid DOM manipulation issues
+vi.mock('@/components/layout', () => ({
+  MainLayout: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="main-layout">{children}</div>
+  ),
+}));
+
+// Mock Next.js router
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    back: vi.fn(),
+  }),
+}));
+
 // Mock fetch globally
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
@@ -69,21 +84,45 @@ Object.defineProperty(console, 'info', {
   writable: true,
 });
 
-// Mock URL.createObjectURL and URL.revokeObjectURL
-global.URL.createObjectURL = vi.fn(() => 'mock-url');
-global.URL.revokeObjectURL = vi.fn();
-
 // Mock document.createElement for download functionality
 const mockLink = {
   href: '',
   download: '',
   click: vi.fn(),
 };
-const mockCreateElement = vi.fn(() => mockLink);
+
 Object.defineProperty(document, 'createElement', {
-  value: mockCreateElement,
+  value: vi.fn(() => mockLink),
   writable: true,
 });
+
+// Mock document event listeners
+Object.defineProperty(document, 'addEventListener', {
+  value: vi.fn(),
+  writable: true,
+});
+
+Object.defineProperty(document, 'removeEventListener', {
+  value: vi.fn(),
+  writable: true,
+});
+
+// Mock URL.createObjectURL and URL.revokeObjectURL
+Object.defineProperty(URL, 'createObjectURL', {
+  value: vi.fn(() => 'mock-url'),
+  writable: true,
+});
+
+Object.defineProperty(URL, 'revokeObjectURL', {
+  value: vi.fn(),
+  writable: true,
+});
+
+// Mock Blob constructor
+global.Blob = vi.fn(() => ({
+  size: 0,
+  type: 'application/json',
+})) as any;
 
 describe('DiagnosticsPage', () => {
   const mockDiagnosticsData = {

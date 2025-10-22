@@ -1,20 +1,24 @@
 'use client';
 
 import { MainLayout } from '@/components/layout';
-import { PageEditor } from '@/components/editor/page-editor';
+import { SimplePageCreator } from '@/components/editor/simple-page-creator';
 import { useRouter } from 'next/navigation';
 
 export default function CreatePagePage() {
   const router = useRouter();
 
-  const handleSave = async (data: { title: string; content: string; description?: string }) => {
+  const handleSave = async (data: { title: string }) => {
     try {
       const response = await fetch('/api/pages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          title: data.title,
+          content: '', // Empty content initially
+          description: '', // Empty description initially
+        }),
       });
 
       if (!response.ok) {
@@ -35,10 +39,9 @@ export default function CreatePagePage() {
 
   return (
     <MainLayout>
-      <PageEditor
+      <SimplePageCreator
         onSave={handleSave}
         onCancel={handleCancel}
-        isEditing={false}
       />
     </MainLayout>
   );

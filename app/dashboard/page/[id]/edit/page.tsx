@@ -13,7 +13,7 @@ interface PageData {
 }
 
 interface EditPagePageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default function EditPagePage({ params }: EditPagePageProps) {
@@ -25,8 +25,7 @@ export default function EditPagePage({ params }: EditPagePageProps) {
   useEffect(() => {
     const fetchPage = async () => {
       try {
-        const resolvedParams = await params;
-        const response = await fetch(`/api/pages/${resolvedParams.id}`);
+        const response = await fetch(`/api/pages/${params.id}`);
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -52,8 +51,7 @@ export default function EditPagePage({ params }: EditPagePageProps) {
 
   const handleSave = async (data: { title: string; content: string; description?: string }) => {
     try {
-      const resolvedParams = await params;
-      const response = await fetch(`/api/pages/${resolvedParams.id}`, {
+      const response = await fetch(`/api/pages/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

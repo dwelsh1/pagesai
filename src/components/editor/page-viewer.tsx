@@ -76,9 +76,9 @@ const BlockNoteRenderer = ({ content }: { content: any }) => {
 const BlockNoteEditor = dynamic(
   () => Promise.resolve({ 
     default: ({ editor, onContentChange }: { editor: any; onContentChange: () => void }) => {
-      const [content, setContent] = React.useState<any>(null);
+      const [content, setContent] = useState<any>(null);
       
-      React.useEffect(() => {
+      useEffect(() => {
         if (editor) {
           setContent(editor.document);
         }

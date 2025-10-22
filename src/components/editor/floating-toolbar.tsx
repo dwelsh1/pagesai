@@ -12,6 +12,8 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
+  console.log('FloatingToolbar rendered, editor:', !!editor, 'isVisible:', isVisible);
+
   const updatePosition = useCallback(() => {
     if (!editor || typeof window === 'undefined') return;
 
@@ -19,8 +21,11 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const { state } = editor;
       const { selection } = state;
       
+      console.log('updatePosition called, selection empty:', selection.empty);
+      
       // Only show toolbar if there's a text selection
       if (selection.empty) {
+        console.log('Selection is empty, hiding toolbar');
         setIsVisible(false);
         return;
       }
@@ -42,6 +47,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
 
       setPosition({ top, left });
       setIsVisible(true);
+      console.log('Toolbar should be visible now, position:', { top, left });
     } catch (error) {
       console.warn('FloatingToolbar positioning error:', error);
       setIsVisible(false);
@@ -52,6 +58,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
     if (!editor) return;
 
     try {
+      console.log('Setting up FloatingToolbar event listeners');
       // Update position on selection changes
       editor.on('selectionUpdate', updatePosition);
       editor.on('transaction', updatePosition);
@@ -60,6 +67,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       editor.on('blur', () => setIsVisible(false));
 
       return () => {
+        console.log('Cleaning up FloatingToolbar event listeners');
         editor.off('selectionUpdate', updatePosition);
         editor.off('transaction', updatePosition);
         editor.off('blur', () => setIsVisible(false));

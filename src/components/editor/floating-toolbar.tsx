@@ -84,7 +84,9 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       <button
         onClick={() => {
           try {
+            console.log('Bold button clicked, editor active:', editor.isActive('bold'));
             editor.chain().focus().toggleBold().run();
+            console.log('Bold command executed, now active:', editor.isActive('bold'));
           } catch (error) {
             console.warn('Bold toggle error:', error);
           }
@@ -102,7 +104,9 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       <button
         onClick={() => {
           try {
+            console.log('Italic button clicked, editor active:', editor.isActive('italic'));
             editor.chain().focus().toggleItalic().run();
+            console.log('Italic command executed, now active:', editor.isActive('italic'));
           } catch (error) {
             console.warn('Italic toggle error:', error);
           }

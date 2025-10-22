@@ -106,3 +106,14 @@
   background: none !important;
   padding: 0 !important;
 }
+
+/* Ensure bold and italic formatting is visible */
+.tiptap-editor .ProseMirror strong,
+.tiptap-editor .ProseMirror b {
+  font-weight: bold !important;
+}
+
+.tiptap-editor .ProseMirror em,
+.tiptap-editor .ProseMirror i {
+  font-style: italic !important;
+}

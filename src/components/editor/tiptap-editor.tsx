@@ -70,6 +70,17 @@ export function TipTapEditor({
             class: '',
           },
         },
+        // Ensure bold, italic, and code are enabled
+        bold: {
+          HTMLAttributes: {
+            class: '',
+          },
+        },
+        italic: {
+          HTMLAttributes: {
+            class: '',
+          },
+        },
       }),
     ],
     content: htmlContent,

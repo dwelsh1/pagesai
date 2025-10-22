@@ -69,8 +69,10 @@ function ClientBlockNoteEditor({ content, pageId }: { content: string; pageId: s
       const newEditor = BlockNoteEditor.create({
         schema,
         initialContent: content ? JSON.parse(content) : undefined,
-        editable: true,
       });
+      
+      // Set editor as editable (new way)
+      newEditor.isEditable = true;
       
       setEditor(newEditor);
     };

@@ -3,6 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import DashboardPage from '../../../app/dashboard/page';
 
+// Mock Next.js router
+const mockPush = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
+
 // Mock the MainLayout component
 vi.mock('@/components/layout', () => ({
   MainLayout: ({ children }: { children: React.ReactNode }) => (
@@ -52,7 +60,7 @@ describe('DashboardPage', () => {
     render(<DashboardPage />);
 
     expect(screen.getByText('Welcome to PagesAI')).toBeInTheDocument();
-    expect(screen.getByText('Create, organize, and export your pages with ease.')).toBeInTheDocument();
+    expect(screen.getByText('Create, organize, and collaborate on your pages with ease.')).toBeInTheDocument();
   });
 
   it('should render quick action buttons', () => {
@@ -115,7 +123,7 @@ describe('DashboardPage', () => {
     const newPageButton = screen.getByText('New Page');
     await user.click(newPageButton);
 
-    expect(consoleSpy).toHaveBeenCalledWith('Creating new page...');
+    expect(mockPush).toHaveBeenCalledWith('/dashboard/page/create');
     
     consoleSpy.mockRestore();
   });

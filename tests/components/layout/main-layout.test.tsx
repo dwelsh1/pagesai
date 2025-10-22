@@ -2,6 +2,14 @@ import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { MainLayout } from '@/components/layout/main-layout';
 
+// Mock Next.js router
+const mockPush = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
+
 // Mock the Header and Sidebar components
 vi.mock('@/components/layout/header', () => ({
   Header: () => <div data-testid="header">Header</div>,

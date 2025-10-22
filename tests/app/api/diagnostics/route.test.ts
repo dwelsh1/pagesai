@@ -40,11 +40,15 @@ describe('Diagnostics API Route', () => {
     // Reset all mocks
     vi.clearAllMocks();
     
-    // Mock process properties
-    Object.assign(process, mockProcess);
-    
-    // Mock environment variables
-    Object.assign(process.env, mockEnv);
+    // Mock process properties using vi.stubGlobal
+    vi.stubGlobal('process', {
+      ...process,
+      ...mockProcess,
+      env: {
+        ...process.env,
+        ...mockEnv,
+      },
+    });
   });
 
   afterEach(() => {

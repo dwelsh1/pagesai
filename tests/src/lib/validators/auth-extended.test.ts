@@ -108,10 +108,10 @@ describe('Extended Auth Validators', () => {
       expect(() => registerSchema.parse(request)).not.toThrow();
     });
 
-    it('should validate a correct registration request with null email', () => {
+    it('should validate a correct registration request with undefined email', () => {
       const request = {
         username: 'testuser',
-        email: null,
+        email: undefined,
         password: 'password123',
       };
       expect(() => registerSchema.parse(request)).not.toThrow();

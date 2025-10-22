@@ -3,6 +3,13 @@ import { verifyPassword, hashPassword } from '@/lib/password';
 import { decrypt } from '@/lib/auth';
 import { cookies } from 'next/headers';
 
+export async function getServerSession() {
+  const user = await getUser();
+  if (!user) return null;
+  
+  return { user };
+}
+
 export async function getUser() {
   const cookieStore = await cookies();
   const session = cookieStore.get('session')?.value;

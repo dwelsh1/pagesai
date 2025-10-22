@@ -8,11 +8,14 @@
 ![Vitest](https://img.shields.io/badge/Vitest-Testing-6E9F18?style=flat-square&logo=vitest)
 ![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=flat-square&logo=github-actions)
 
-A modern web application built with Next.js 15, React 19, TypeScript, and a comprehensive tech stack. Features include authentication, dashboard with responsive layout, system diagnostics, and hierarchical page navigation.
+A modern web application built with Next.js 15, React 19, TypeScript, and a comprehensive tech stack. Features include authentication, dashboard with responsive layout, system diagnostics, TipTap rich text editor, and hierarchical page navigation.
 
 ## 🚀 Features
 
 - **Modern Authentication**: JWT-based authentication with secure password hashing
+- **TipTap Rich Text Editor**: Live editing with auto-save and clean, borderless UI
+- **Real-time Search**: Full-text search across pages with dropdown results
+- **System Diagnostics**: Comprehensive monitoring with console log capture
 - **Responsive Design**: Clean, minimalist UI built with Tailwind CSS
 - **Type Safety**: End-to-end TypeScript with strict mode enabled
 - **Database**: SQLite with Prisma ORM for type-safe database operations
@@ -29,6 +32,7 @@ A modern web application built with Next.js 15, React 19, TypeScript, and a comp
 - **TypeScript 5.9.3** - End-to-end type safety
 - **Tailwind CSS 4.1.14** - Utility-first styling
 - **shadcn/ui + Radix** - Accessible component primitives
+- **TipTap** - Modern rich text editor with React 19 compatibility
 - **Zustand 5.0.8** - Lightweight client state management
 - **TanStack React Query 5.90.5** - Server state management
 - **Zod 4.1.12** - Runtime validation and type safety

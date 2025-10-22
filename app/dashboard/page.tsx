@@ -4,11 +4,13 @@ import { MainLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, FileText, Clock, TrendingUp, Calendar } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
+  const router = useRouter();
+
   const handleCreatePage = () => {
-    // TODO: Implement page creation
-    console.log('Creating new page...');
+    router.push('/dashboard/page/create');
   };
 
   const recentPages = [

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Header } from './header';
 import { Sidebar } from './sidebar';
 import { Button } from '@/components/ui/button';
@@ -12,24 +13,25 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
 
   const handleCreatePage = () => {
-    // TODO: Implement page creation
-    console.log('Creating new page...');
+    console.log('MainLayout: Creating new page...');
+    router.push('/dashboard/page/create');
   };
 
   const handleEditPage = (pageId: string) => {
-    // TODO: Implement page editing
-    console.log('Editing page:', pageId);
+    console.log('MainLayout: Editing page:', pageId);
+    router.push(`/dashboard/page/${pageId}/edit`);
   };
 
   const handleDeletePage = (pageId: string) => {
-    // TODO: Implement page deletion
-    console.log('Deleting page:', pageId);
+    console.log('MainLayout: Deleting page:', pageId);
+    // TODO: Implement page deletion with confirmation
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-white">
       {/* Header */}
       <Header />
 

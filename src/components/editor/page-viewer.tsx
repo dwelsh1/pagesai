@@ -17,15 +17,28 @@ const schema = BlockNoteSchema.create({
 const BlockNoteEditor = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: ({ editor, onContentChange }: { editor: any; onContentChange: () => void }) => {
-      const { BlockNoteDefaultUI, BlockNoteContext } = mod;
+      const { BlockNoteViewRaw, BlockNoteContext, ComponentsContext } = mod;
+      
+      // Create a minimal components context
+      const components = {
+        Root: ({ children }: { children: React.ReactNode }) => (
+          <div className="prose max-w-none min-h-[500px] focus:outline-none">
+            {children}
+          </div>
+        ),
+        BlockContentWrapper: ({ children }: { children: React.ReactNode }) => (
+          <div className="block-content">{children}</div>
+        ),
+      };
       
       return (
         <BlockNoteContext.Provider value={editor}>
-          <BlockNoteDefaultUI 
-            editor={editor} 
-            className="prose max-w-none min-h-[500px] focus:outline-none"
-            onContentChange={onContentChange}
-          />
+          <ComponentsContext.Provider value={components}>
+            <BlockNoteViewRaw 
+              editor={editor}
+              onContentChange={onContentChange}
+            />
+          </ComponentsContext.Provider>
         </BlockNoteContext.Provider>
       );
     }

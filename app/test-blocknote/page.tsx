@@ -6,15 +6,17 @@ import dynamic from 'next/dynamic';
 // Test 1: Direct import using useCreateBlockNote + BlockNoteViewEditor (client-side only)
 const DirectBlockNoteTest = dynamic(
   () => Promise.resolve(() => {
-    const { useCreateBlockNote, BlockNoteView, BlockNoteContext } = require('@blocknote/react');
+    const { useCreateBlockNote, BlockNoteViewEditor, BlockNoteContext } = require('@blocknote/react');
+    
+    console.log('Available exports:', Object.keys(require('@blocknote/react')));
     
     const editor = useCreateBlockNote();
 
     return (
       <div className="p-4 border rounded">
-        <h3 className="text-lg font-semibold mb-2">Test 1: useCreateBlockNote + BlockNoteView</h3>
+        <h3 className="text-lg font-semibold mb-2">Test 1: useCreateBlockNote + BlockNoteViewEditor</h3>
         <BlockNoteContext.Provider value={editor}>
-          <BlockNoteView 
+          <BlockNoteViewEditor 
             editor={editor}
             className="min-h-[200px] border rounded p-2"
           />

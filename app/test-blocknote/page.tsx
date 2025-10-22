@@ -3,22 +3,29 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
-// Test 1: Direct import using useCreateBlockNote + BlockNoteViewEditor (client-side only)
+// Wrapper component to handle BlockNote context properly
+const BlockNoteWrapper = ({ children }: { children: React.ReactNode }) => {
+  const { useCreateBlockNote, BlockNoteContext } = require('@blocknote/react');
+  const editor = useCreateBlockNote();
+  
+  return (
+    <BlockNoteContext.Provider value={editor}>
+      {children}
+    </BlockNoteContext.Provider>
+  );
+};
+
+// Test 1: Direct import using BlockNoteViewEditor
 const DirectBlockNoteTest = dynamic(
   () => Promise.resolve(() => {
-    const { useCreateBlockNote, BlockNoteDefaultUI, BlockNoteContext } = require('@blocknote/react');
-    
-    const editor = useCreateBlockNote();
+    const { BlockNoteViewEditor } = require('@blocknote/react');
 
     return (
       <div className="p-4 border rounded">
-        <h3 className="text-lg font-semibold mb-2">Test 1: useCreateBlockNote + BlockNoteDefaultUI</h3>
-        <BlockNoteContext.Provider value={editor}>
-          <BlockNoteDefaultUI 
-            editor={editor}
-            className="min-h-[200px] border rounded p-2"
-          />
-        </BlockNoteContext.Provider>
+        <h3 className="text-lg font-semibold mb-2">Test 1: BlockNoteViewEditor</h3>
+        <BlockNoteViewEditor 
+          className="min-h-[200px] border rounded p-2"
+        />
       </div>
     );
   }),
@@ -28,23 +35,18 @@ const DirectBlockNoteTest = dynamic(
   }
 );
 
-// Test 2: Dynamic import using useCreateBlockNote + BlockNoteViewEditor
+// Test 2: Dynamic import using BlockNoteViewEditor
 const DynamicBlockNoteTest = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: () => {
-      const { useCreateBlockNote, BlockNoteDefaultUI, BlockNoteContext } = mod;
-      
-      const editor = useCreateBlockNote();
+      const { BlockNoteViewEditor } = mod;
 
       return (
         <div className="p-4 border rounded">
-          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic useCreateBlockNote + BlockNoteDefaultUI</h3>
-          <BlockNoteContext.Provider value={editor}>
-            <BlockNoteDefaultUI 
-              editor={editor}
-              className="min-h-[200px] border rounded p-2"
-            />
-          </BlockNoteContext.Provider>
+          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic BlockNoteViewEditor</h3>
+          <BlockNoteViewEditor 
+            className="min-h-[200px] border rounded p-2"
+          />
         </div>
       );
     }
@@ -99,11 +101,13 @@ export default function TestBlockNotePage() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">BlockNote Editor Tests</h1>
         
-        <div className="space-y-8">
-          <DirectBlockNoteTest />
-          <DynamicBlockNoteTest />
-          <SimpleHTMLTest />
-        </div>
+        <BlockNoteWrapper>
+          <div className="space-y-8">
+            <DirectBlockNoteTest />
+            <DynamicBlockNoteTest />
+            <SimpleHTMLTest />
+          </div>
+        </BlockNoteWrapper>
         
         <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded">
           <h3 className="text-lg font-semibold mb-2">Instructions:</h3>

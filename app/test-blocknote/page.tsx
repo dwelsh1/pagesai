@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
-import { BlockNoteDefaultUI, BlockNoteContext } from '@blocknote/react';
+import { useCreateBlockNote, BlockNoteView } from '@blocknote/react';
 import dynamic from 'next/dynamic';
 
 const schema = BlockNoteSchema.create({
@@ -11,19 +11,53 @@ const schema = BlockNoteSchema.create({
   },
 });
 
-// Test 1: Direct import (no dynamic)
+// Test 1: Direct import using useCreateBlockNote (recommended approach)
 function DirectBlockNoteTest() {
-  const [editor, setEditor] = useState<any>(null);
+  const editor = useCreateBlockNote({
+    schema,
+    initialContent: [
+      {
+        id: '1',
+        type: 'paragraph',
+        props: {
+          textColor: 'default',
+          backgroundColor: 'default',
+          textAlignment: 'left',
+        },
+        content: [
+          {
+            type: 'text',
+            text: 'Hello from useCreateBlockNote!',
+            styles: {},
+          },
+        ],
+        children: [],
+      },
+    ],
+  });
 
-  useEffect(() => {
-    const initEditor = async () => {
-      const { BlockNoteEditor } = await import('@blocknote/core');
+  return (
+    <div className="p-4 border rounded">
+      <h3 className="text-lg font-semibold mb-2">Test 1: useCreateBlockNote + BlockNoteView</h3>
+      <BlockNoteView 
+        editor={editor}
+        className="min-h-[200px] border rounded p-2"
+      />
+    </div>
+  );
+}
+
+// Test 2: Dynamic import using useCreateBlockNote
+const DynamicBlockNoteTest = dynamic(
+  () => import('@blocknote/react').then((mod) => ({ 
+    default: () => {
+      const { useCreateBlockNote, BlockNoteView } = mod;
       
-      const newEditor = BlockNoteEditor.create({
+      const editor = useCreateBlockNote({
         schema,
         initialContent: [
           {
-            id: '1',
+            id: '2',
             type: 'paragraph',
             props: {
               textColor: 'default',
@@ -33,7 +67,7 @@ function DirectBlockNoteTest() {
             content: [
               {
                 type: 'text',
-                text: 'Hello from direct import!',
+                text: 'Hello from dynamic useCreateBlockNote!',
                 styles: {},
               },
             ],
@@ -41,85 +75,14 @@ function DirectBlockNoteTest() {
           },
         ],
       });
-      
-      newEditor.isEditable = true;
-      setEditor(newEditor);
-    };
-
-    initEditor();
-  }, []);
-
-  if (!editor) {
-    return <div className="p-4">Loading direct editor...</div>;
-  }
-
-  return (
-    <div className="p-4 border rounded">
-      <h3 className="text-lg font-semibold mb-2">Test 1: Direct Import with BlockNoteDefaultUI</h3>
-      <BlockNoteContext.Provider value={editor}>
-        <BlockNoteDefaultUI
-          editor={editor}
-          className="min-h-[200px] border rounded p-2"
-        />
-      </BlockNoteContext.Provider>
-    </div>
-  );
-}
-
-// Test 2: Dynamic import
-const DynamicBlockNoteTest = dynamic(
-  () => import('@blocknote/react').then((mod) => ({ 
-    default: () => {
-      const { BlockNoteDefaultUI, BlockNoteContext } = mod;
-      const [editor, setEditor] = useState<any>(null);
-
-      useEffect(() => {
-        const initEditor = async () => {
-          const { BlockNoteEditor } = await import('@blocknote/core');
-          
-          const newEditor = BlockNoteEditor.create({
-            schema,
-            initialContent: [
-              {
-                id: '2',
-                type: 'paragraph',
-                props: {
-                  textColor: 'default',
-                  backgroundColor: 'default',
-                  textAlignment: 'left',
-                },
-                content: [
-                  {
-                    type: 'text',
-                    text: 'Hello from dynamic import!',
-                    styles: {},
-                  },
-                ],
-                children: [],
-              },
-            ],
-          });
-          
-          newEditor.isEditable = true;
-          setEditor(newEditor);
-        };
-
-        initEditor();
-      }, []);
-
-      if (!editor) {
-        return <div className="p-4">Loading dynamic editor...</div>;
-      }
 
       return (
         <div className="p-4 border rounded">
-          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic Import with BlockNoteDefaultUI</h3>
-          <BlockNoteContext.Provider value={editor}>
-            <BlockNoteDefaultUI
-              editor={editor}
-              className="min-h-[200px] border rounded p-2"
-            />
-          </BlockNoteContext.Provider>
+          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic useCreateBlockNote + BlockNoteView</h3>
+          <BlockNoteView 
+            editor={editor}
+            className="min-h-[200px] border rounded p-2"
+          />
         </div>
       );
     }

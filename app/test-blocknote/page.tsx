@@ -5,13 +5,17 @@ import dynamic from 'next/dynamic';
 
 // Wrapper component to handle BlockNote context properly (client-side only)
 const BlockNoteWrapper = dynamic(
-  () => Promise.resolve(({ children }: { children: React.ReactNode }) => {
+  () => Promise.resolve(() => {
     const { useCreateBlockNote, BlockNoteContext } = require('@blocknote/react');
     const editor = useCreateBlockNote();
     
     return (
       <BlockNoteContext.Provider value={editor}>
-        {children}
+        <div className="space-y-8">
+          <DirectBlockNoteTest editor={editor} />
+          <DynamicBlockNoteTest editor={editor} />
+          <SimpleHTMLTest />
+        </div>
       </BlockNoteContext.Provider>
     );
   }),
@@ -23,13 +27,14 @@ const BlockNoteWrapper = dynamic(
 
 // Test 1: Direct import using BlockNoteViewEditor
 const DirectBlockNoteTest = dynamic(
-  () => Promise.resolve(() => {
+  () => Promise.resolve(({ editor }: { editor: any }) => {
     const { BlockNoteViewEditor } = require('@blocknote/react');
 
     return (
       <div className="p-4 border rounded">
         <h3 className="text-lg font-semibold mb-2">Test 1: BlockNoteViewEditor</h3>
         <BlockNoteViewEditor 
+          editor={editor}
           className="min-h-[200px] border rounded p-2"
         />
       </div>
@@ -44,13 +49,14 @@ const DirectBlockNoteTest = dynamic(
 // Test 2: Dynamic import using BlockNoteViewEditor
 const DynamicBlockNoteTest = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
-    default: () => {
+    default: ({ editor }: { editor: any }) => {
       const { BlockNoteViewEditor } = mod;
 
       return (
         <div className="p-4 border rounded">
           <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic BlockNoteViewEditor</h3>
           <BlockNoteViewEditor 
+            editor={editor}
             className="min-h-[200px] border rounded p-2"
           />
         </div>
@@ -107,13 +113,7 @@ export default function TestBlockNotePage() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">BlockNote Editor Tests</h1>
         
-        <BlockNoteWrapper>
-          <div className="space-y-8">
-            <DirectBlockNoteTest />
-            <DynamicBlockNoteTest />
-            <SimpleHTMLTest />
-          </div>
-        </BlockNoteWrapper>
+        <BlockNoteWrapper />
         
         <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded">
           <h3 className="text-lg font-semibold mb-2">Instructions:</h3>

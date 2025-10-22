@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
-import { useCreateBlockNote, BlockNoteView } from '@blocknote/react';
 import dynamic from 'next/dynamic';
 
 const schema = BlockNoteSchema.create({
@@ -11,47 +10,55 @@ const schema = BlockNoteSchema.create({
   },
 });
 
-// Test 1: Direct import using useCreateBlockNote (recommended approach)
-function DirectBlockNoteTest() {
-  const editor = useCreateBlockNote({
-    schema,
-    initialContent: [
-      {
-        id: '1',
-        type: 'paragraph',
-        props: {
-          textColor: 'default',
-          backgroundColor: 'default',
-          textAlignment: 'left',
-        },
-        content: [
-          {
-            type: 'text',
-            text: 'Hello from useCreateBlockNote!',
-            styles: {},
+// Test 1: Direct import using useCreateBlockNote + BlockNoteViewEditor (client-side only)
+const DirectBlockNoteTest = dynamic(
+  () => Promise.resolve(() => {
+    const { useCreateBlockNote, BlockNoteViewEditor } = require('@blocknote/react');
+    
+    const editor = useCreateBlockNote({
+      schema,
+      initialContent: [
+        {
+          id: '1',
+          type: 'paragraph',
+          props: {
+            textColor: 'default',
+            backgroundColor: 'default',
+            textAlignment: 'left',
           },
-        ],
-        children: [],
-      },
-    ],
-  });
+          content: [
+            {
+              type: 'text',
+              text: 'Hello from useCreateBlockNote!',
+              styles: {},
+            },
+          ],
+          children: [],
+        },
+      ],
+    });
 
-  return (
-    <div className="p-4 border rounded">
-      <h3 className="text-lg font-semibold mb-2">Test 1: useCreateBlockNote + BlockNoteView</h3>
-      <BlockNoteView 
-        editor={editor}
-        className="min-h-[200px] border rounded p-2"
-      />
-    </div>
-  );
-}
+    return (
+      <div className="p-4 border rounded">
+        <h3 className="text-lg font-semibold mb-2">Test 1: useCreateBlockNote + BlockNoteViewEditor</h3>
+        <BlockNoteViewEditor 
+          editor={editor}
+          className="min-h-[200px] border rounded p-2"
+        />
+      </div>
+    );
+  }),
+  { 
+    ssr: false,
+    loading: () => <div className="p-4">Loading direct component...</div>
+  }
+);
 
-// Test 2: Dynamic import using useCreateBlockNote
+// Test 2: Dynamic import using useCreateBlockNote + BlockNoteViewEditor
 const DynamicBlockNoteTest = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: () => {
-      const { useCreateBlockNote, BlockNoteView } = mod;
+      const { useCreateBlockNote, BlockNoteViewEditor } = mod;
       
       const editor = useCreateBlockNote({
         schema,
@@ -78,8 +85,8 @@ const DynamicBlockNoteTest = dynamic(
 
       return (
         <div className="p-4 border rounded">
-          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic useCreateBlockNote + BlockNoteView</h3>
-          <BlockNoteView 
+          <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic useCreateBlockNote + BlockNoteViewEditor</h3>
+          <BlockNoteViewEditor 
             editor={editor}
             className="min-h-[200px] border rounded p-2"
           />

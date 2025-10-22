@@ -13,20 +13,80 @@ const schema = BlockNoteSchema.create({
   },
 });
 
+// Simple HTML renderer for BlockNote content
+const BlockNoteRenderer = ({ content }: { content: any }) => {
+  if (!content || !Array.isArray(content)) {
+    return <div className="prose max-w-none min-h-[500px] p-4 text-gray-500">No content available</div>;
+  }
+
+  const renderBlock = (block: any, index: number) => {
+    switch (block.type) {
+      case 'paragraph':
+        return (
+          <p key={index} className="mb-4">
+            {block.content?.map((item: any, i: number) => 
+              item.type === 'text' ? (
+                <span key={i} style={{ 
+                  fontWeight: item.styles?.bold ? 'bold' : 'normal',
+                  fontStyle: item.styles?.italic ? 'italic' : 'normal',
+                  textDecoration: item.styles?.underline ? 'underline' : 'none'
+                }}>
+                  {item.text}
+                </span>
+              ) : null
+            )}
+          </p>
+        );
+      case 'heading':
+        const HeadingTag = `h${block.props?.level || 1}` as keyof JSX.IntrinsicElements;
+        return (
+          <HeadingTag key={index} className="mb-4 font-bold">
+            {block.content?.map((item: any, i: number) => 
+              item.type === 'text' ? item.text : null
+            )}
+          </HeadingTag>
+        );
+      case 'bulletListItem':
+        return (
+          <li key={index} className="mb-2">
+            {block.content?.map((item: any, i: number) => 
+              item.type === 'text' ? item.text : null
+            )}
+          </li>
+        );
+      default:
+        return (
+          <div key={index} className="mb-4">
+            {block.content?.map((item: any, i: number) => 
+              item.type === 'text' ? item.text : null
+            )}
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="prose max-w-none min-h-[500px] p-4">
+      {content.map((block: any, index: number) => renderBlock(block, index))}
+    </div>
+  );
+};
+
 // Dynamic import for BlockNote editor to avoid SSR issues
 const BlockNoteEditor = dynamic(
-  () => import('@blocknote/react').then((mod) => ({ 
+  () => Promise.resolve({ 
     default: ({ editor, onContentChange }: { editor: any; onContentChange: () => void }) => {
-      const { BlockNoteView } = mod;
+      const [content, setContent] = React.useState<any>(null);
       
-      return (
-        <BlockNoteView 
-          editor={editor}
-          className="prose max-w-none min-h-[500px] focus:outline-none"
-        />
-      );
+      React.useEffect(() => {
+        if (editor) {
+          setContent(editor.document);
+        }
+      }, [editor]);
+      
+      return <BlockNoteRenderer content={content} />;
     }
-  })),
+  }),
   { 
     ssr: false,
     loading: () => <div className="animate-pulse bg-gray-200 h-64 rounded"></div>

@@ -18,10 +18,19 @@ const schema = BlockNoteSchema.create({
 const BlockNoteEditor = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: ({ editor, onContentChange, editable, className }: any) => {
-      const { BlockNoteView } = mod;
+      // Debug: log available exports
+      console.log('Available exports from @blocknote/react:', Object.keys(mod));
+      
+      // Try different component names
+      const Component = mod.BlockNoteView || mod.BlockNoteViewEditor || mod.BlockNoteDefaultUI;
+      
+      if (!Component) {
+        console.error('No valid BlockNote component found');
+        return <div className="text-red-500 p-4">BlockNote component not found</div>;
+      }
       
       return (
-        <BlockNoteView
+        <Component
           editor={editor}
           onContentChange={onContentChange}
           editable={editable}

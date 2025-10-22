@@ -123,7 +123,7 @@ async function main() {
       ]),
       description: 'Your first page in PagesAI',
       tags: 'welcome,getting-started',
-      userId: testUser.id,
+      userId: adminUser.id, // Changed to adminUser.id
     },
   });
 
@@ -202,7 +202,7 @@ async function main() {
       ]),
       description: 'A sample document showcasing editor features',
       tags: 'sample,document,features',
-      userId: testUser.id,
+      userId: adminUser.id, // Changed to adminUser.id
     },
   });
 

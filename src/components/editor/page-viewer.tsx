@@ -1,7 +1,6 @@
 'use client';
 
 import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core';
-import { BlockNoteContext } from '@blocknote/react';
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
@@ -18,17 +17,15 @@ const schema = BlockNoteSchema.create({
 const BlockNoteEditor = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: ({ editor, onContentChange }: { editor: any; onContentChange: () => void }) => {
-      const { BlockNoteViewEditor, BlockNoteContext } = mod;
+      const { BlockNoteView } = mod;
       
       return (
-        <BlockNoteContext.Provider value={editor}>
-          <BlockNoteViewEditor 
-            editor={editor} 
-            editable={true}
-            className="prose max-w-none min-h-[500px] focus:outline-none"
-            onContentChange={onContentChange}
-          />
-        </BlockNoteContext.Provider>
+        <BlockNoteView 
+          editor={editor} 
+          editable={true}
+          className="prose max-w-none min-h-[500px] focus:outline-none"
+          onContentChange={onContentChange}
+        />
       );
     }
   })),

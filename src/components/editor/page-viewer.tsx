@@ -18,17 +18,15 @@ const schema = BlockNoteSchema.create({
 const BlockNoteEditor = dynamic(
   () => import('@blocknote/react').then((mod) => ({ 
     default: ({ editor, onContentChange, editable, className }: any) => {
-      const { BlockNoteViewEditor, BlockNoteContext } = mod;
+      const { BlockNoteView } = mod;
       
       return (
-        <BlockNoteContext.Provider value={editor}>
-          <BlockNoteViewEditor
-            editor={editor}
-            onContentChange={onContentChange}
-            editable={editable}
-            className={className}
-          />
-        </BlockNoteContext.Provider>
+        <BlockNoteView
+          editor={editor}
+          onContentChange={onContentChange}
+          editable={editable}
+          className={className}
+        />
       );
     }
   })),

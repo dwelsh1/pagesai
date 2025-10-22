@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Underline } from 'lucide-react';
+import { Bold, Italic, Code } from 'lucide-react';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -13,51 +13,60 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
   const updatePosition = useCallback(() => {
-    if (!editor) return;
+    if (!editor || typeof window === 'undefined') return;
 
-    const { state } = editor;
-    const { selection } = state;
-    
-    // Only show toolbar if there's a text selection
-    if (selection.empty) {
+    try {
+      const { state } = editor;
+      const { selection } = state;
+      
+      // Only show toolbar if there's a text selection
+      if (selection.empty) {
+        setIsVisible(false);
+        return;
+      }
+
+      // Get the DOM coordinates of the selection
+      const { from, to } = selection;
+      const start = editor.view.coordsAtPos(from);
+      const end = editor.view.coordsAtPos(to);
+
+      // Calculate position for the toolbar
+      const toolbarHeight = 40;
+      const toolbarWidth = 120;
+      
+      const top = Math.max(0, start.top - toolbarHeight - 8);
+      const left = Math.max(0, Math.min(
+        (start.left + end.left) / 2 - toolbarWidth / 2,
+        window.innerWidth - toolbarWidth - 16
+      ));
+
+      setPosition({ top, left });
+      setIsVisible(true);
+    } catch (error) {
+      console.warn('FloatingToolbar positioning error:', error);
       setIsVisible(false);
-      return;
     }
-
-    // Get the DOM coordinates of the selection
-    const { from, to } = selection;
-    const start = editor.view.coordsAtPos(from);
-    const end = editor.view.coordsAtPos(to);
-
-    // Calculate position for the toolbar
-    const toolbarHeight = 40;
-    const toolbarWidth = 120;
-    
-    const top = Math.max(0, start.top - toolbarHeight - 8);
-    const left = Math.max(0, Math.min(
-      (start.left + end.left) / 2 - toolbarWidth / 2,
-      window.innerWidth - toolbarWidth - 16
-    ));
-
-    setPosition({ top, left });
-    setIsVisible(true);
   }, [editor]);
 
   useEffect(() => {
     if (!editor) return;
 
-    // Update position on selection changes
-    editor.on('selectionUpdate', updatePosition);
-    editor.on('transaction', updatePosition);
+    try {
+      // Update position on selection changes
+      editor.on('selectionUpdate', updatePosition);
+      editor.on('transaction', updatePosition);
 
-    // Hide toolbar when editor loses focus
-    editor.on('blur', () => setIsVisible(false));
+      // Hide toolbar when editor loses focus
+      editor.on('blur', () => setIsVisible(false));
 
-    return () => {
-      editor.off('selectionUpdate', updatePosition);
-      editor.off('transaction', updatePosition);
-      editor.off('blur', () => setIsVisible(false));
-    };
+      return () => {
+        editor.off('selectionUpdate', updatePosition);
+        editor.off('transaction', updatePosition);
+        editor.off('blur', () => setIsVisible(false));
+      };
+    } catch (error) {
+      console.warn('FloatingToolbar event setup error:', error);
+    }
   }, [editor, updatePosition]);
 
   if (!isVisible || !editor) {
@@ -73,7 +82,13 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       }}
     >
       <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
+        onClick={() => {
+          try {
+            editor.chain().focus().toggleBold().run();
+          } catch (error) {
+            console.warn('Bold toggle error:', error);
+          }
+        }}
         className={`p-2 rounded-md transition-colors duration-200 ${
           editor.isActive('bold') 
             ? 'bg-blue-100 text-blue-700 border border-blue-200' 
@@ -85,7 +100,13 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       </button>
 
       <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        onClick={() => {
+          try {
+            editor.chain().focus().toggleItalic().run();
+          } catch (error) {
+            console.warn('Italic toggle error:', error);
+          }
+        }}
         className={`p-2 rounded-md transition-colors duration-200 ${
           editor.isActive('italic') 
             ? 'bg-blue-100 text-blue-700 border border-blue-200' 
@@ -97,15 +118,21 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       </button>
 
       <button
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        onClick={() => {
+          try {
+            editor.chain().focus().toggleCode().run();
+          } catch (error) {
+            console.warn('Code toggle error:', error);
+          }
+        }}
         className={`p-2 rounded-md transition-colors duration-200 ${
-          editor.isActive('underline') 
+          editor.isActive('code') 
             ? 'bg-blue-100 text-blue-700 border border-blue-200' 
             : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
         }`}
-        title="Underline (Ctrl+U)"
+        title="Code (Ctrl+E)"
       >
-        <Underline size={16} />
+        <Code size={16} />
       </button>
     </div>
   );

@@ -2,9 +2,6 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Bold from '@tiptap/extension-bold';
-import Italic from '@tiptap/extension-italic';
-import Underline from '@tiptap/extension-underline';
 import { useCallback, useEffect } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
 import { FloatingToolbar } from './floating-toolbar';
@@ -72,25 +69,6 @@ export function TipTapEditor({
           HTMLAttributes: {
             class: '',
           },
-        },
-        // Disable bold/italic/underline from StarterKit to avoid conflicts
-        bold: false,
-        italic: false,
-      }),
-      // Add individual extensions
-      Bold.configure({
-        HTMLAttributes: {
-          class: '',
-        },
-      }),
-      Italic.configure({
-        HTMLAttributes: {
-          class: '',
-        },
-      }),
-      Underline.configure({
-        HTMLAttributes: {
-          class: '',
         },
       }),
     ],

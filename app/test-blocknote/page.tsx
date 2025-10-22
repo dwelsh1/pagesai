@@ -13,7 +13,7 @@ const DirectBlockNoteTest = dynamic(
     return (
       <div className="p-4 border rounded">
         <h3 className="text-lg font-semibold mb-2">Test 1: useCreateBlockNote + BlockNoteViewEditor</h3>
-        <BlockNoteContext.Provider editor={editor}>
+        <BlockNoteContext.Provider value={editor}>
           <BlockNoteViewEditor 
             editor={editor}
             className="min-h-[200px] border rounded p-2"
@@ -39,7 +39,7 @@ const DynamicBlockNoteTest = dynamic(
       return (
         <div className="p-4 border rounded">
           <h3 className="text-lg font-semibold mb-2">Test 2: Dynamic useCreateBlockNote + BlockNoteViewEditor</h3>
-          <BlockNoteContext.Provider editor={editor}>
+          <BlockNoteContext.Provider value={editor}>
             <BlockNoteViewEditor 
               editor={editor}
               className="min-h-[200px] border rounded p-2"

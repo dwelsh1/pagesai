@@ -3,17 +3,23 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
-// Wrapper component to handle BlockNote context properly
-const BlockNoteWrapper = ({ children }: { children: React.ReactNode }) => {
-  const { useCreateBlockNote, BlockNoteContext } = require('@blocknote/react');
-  const editor = useCreateBlockNote();
-  
-  return (
-    <BlockNoteContext.Provider value={editor}>
-      {children}
-    </BlockNoteContext.Provider>
-  );
-};
+// Wrapper component to handle BlockNote context properly (client-side only)
+const BlockNoteWrapper = dynamic(
+  () => Promise.resolve(({ children }: { children: React.ReactNode }) => {
+    const { useCreateBlockNote, BlockNoteContext } = require('@blocknote/react');
+    const editor = useCreateBlockNote();
+    
+    return (
+      <BlockNoteContext.Provider value={editor}>
+        {children}
+      </BlockNoteContext.Provider>
+    );
+  }),
+  { 
+    ssr: false,
+    loading: () => <div className="p-4">Loading BlockNote context...</div>
+  }
+);
 
 // Test 1: Direct import using BlockNoteViewEditor
 const DirectBlockNoteTest = dynamic(

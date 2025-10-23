@@ -24,6 +24,7 @@
   color: inherit !important;
   box-shadow: none !important;
   border-radius: 0 !important;
+  white-space: pre-wrap !important;
 }
 
 .tiptap-editor .ProseMirror:focus {
@@ -105,6 +106,21 @@
 .tiptap-editor .ProseMirror pre code {
   background: none !important;
   padding: 0 !important;
+}
+
+/* Ensure cursor is visible */
+.tiptap-editor .ProseMirror .ProseMirror-cursor {
+  display: inline-block;
+  width: 0;
+  height: 1.2em;
+  border-left: 2px solid #000;
+  margin-left: -2px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* Slash command decoration */

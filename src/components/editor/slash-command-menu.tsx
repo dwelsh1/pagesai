@@ -74,6 +74,14 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
   const executeCommand = (command: SlashCommand) => {
     // Execute the command directly
     command.command(editor);
+    
+    // Ensure editor maintains focus and cursor is visible
+    setTimeout(() => {
+      editor.commands.focus();
+      // Force a re-render to ensure cursor is visible
+      editor.view.updateState(editor.view.state);
+    }, 50);
+    
     onClose();
   };
 

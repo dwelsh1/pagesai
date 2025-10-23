@@ -51,7 +51,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Code',
     description: 'Make text inline code',
     icon: Code,
-    command: (editor) => editor.chain().focus().toggleCode().run(),
+    command: (editor) => {
+      editor.chain().focus().toggleCode().insertContent('code').run();
+    },
     keywords: ['code', 'inline', 'monospace'],
     category: 'formatting'
   },
@@ -61,7 +63,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Heading 1',
     description: 'Large heading',
     icon: Heading1,
-    command: (editor) => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+    command: (editor) => {
+      editor.chain().focus().toggleHeading({ level: 1 }).insertContent('Heading 1').run();
+    },
     keywords: ['h1', 'heading1', 'title', 'large'],
     category: 'structure'
   },
@@ -69,7 +73,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Heading 2',
     description: 'Medium heading',
     icon: Heading2,
-    command: (editor) => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+    command: (editor) => {
+      editor.chain().focus().toggleHeading({ level: 2 }).insertContent('Heading 2').run();
+    },
     keywords: ['h2', 'heading2', 'subtitle', 'medium'],
     category: 'structure'
   },
@@ -77,7 +83,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Heading 3',
     description: 'Small heading',
     icon: Heading3,
-    command: (editor) => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+    command: (editor) => {
+      editor.chain().focus().toggleHeading({ level: 3 }).insertContent('Heading 3').run();
+    },
     keywords: ['h3', 'heading3', 'small'],
     category: 'structure'
   },
@@ -85,7 +93,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Paragraph',
     description: 'Normal text',
     icon: Type,
-    command: (editor) => editor.chain().focus().setParagraph().run(),
+    command: (editor) => {
+      editor.chain().focus().setParagraph().insertContent('Type something...').run();
+    },
     keywords: ['paragraph', 'normal', 'text', 'p'],
     category: 'structure'
   },
@@ -93,7 +103,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Bullet List',
     description: 'Create a bullet list',
     icon: List,
-    command: (editor) => editor.chain().focus().toggleBulletList().run(),
+    command: (editor) => {
+      editor.chain().focus().toggleBulletList().insertContent('List item').run();
+    },
     keywords: ['bullet', 'list', 'ul', 'unordered'],
     category: 'structure'
   },
@@ -101,7 +113,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Numbered List',
     description: 'Create a numbered list',
     icon: ListOrdered,
-    command: (editor) => editor.chain().focus().toggleOrderedList().run(),
+    command: (editor) => {
+      editor.chain().focus().toggleOrderedList().insertContent('List item').run();
+    },
     keywords: ['numbered', 'ordered', 'ol', 'list'],
     category: 'structure'
   },
@@ -109,7 +123,9 @@ export const slashCommands: SlashCommand[] = [
     title: 'Quote',
     description: 'Create a blockquote',
     icon: Quote,
-    command: (editor) => editor.chain().focus().toggleBlockquote().run(),
+    command: (editor) => {
+      editor.chain().focus().toggleBlockquote().insertContent('Quote').run();
+    },
     keywords: ['quote', 'blockquote', 'citation'],
     category: 'structure'
   },

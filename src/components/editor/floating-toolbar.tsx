@@ -45,24 +45,53 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const start = editor.view.coordsAtPos(from);
       const end = editor.view.coordsAtPos(to);
 
-          // Calculate position for the toolbar - simplified approach
-          const toolbarHeight = 40;
-          const toolbarWidth = 120;
-          
-          // Use simpler positioning - raise it higher above the selection
-          const top = Math.max(0, start.top - toolbarHeight - 16);
-          const left = Math.max(0, (start.left + end.left) / 2 - toolbarWidth / 2);
+      // Calculate position for the toolbar - improved approach
+      const toolbarHeight = 40;
+      const toolbarWidth = 400; // Increased width to accommodate more buttons
+      
+      // Calculate center position of selection
+      const selectionCenter = (start.left + end.left) / 2;
+      
+      // Position toolbar above selection with better bounds checking
+      const top = Math.max(10, start.top - toolbarHeight - 16);
+      
+      // Calculate left position with viewport bounds checking
+      let left = selectionCenter - toolbarWidth / 2;
+      
+      // Ensure toolbar stays within viewport bounds
+      const viewportWidth = window.innerWidth;
+      const minLeft = 10;
+      const maxLeft = viewportWidth - toolbarWidth - 10;
+      
+      if (left < minLeft) {
+        left = minLeft;
+      } else if (left > maxLeft) {
+        left = maxLeft;
+      }
 
       console.log('Start coords:', start);
       console.log('End coords:', end);
+      console.log('Selection center:', selectionCenter);
       console.log('Calculated position:', { top, left });
       console.log('Window dimensions:', { width: window.innerWidth, height: window.innerHeight });
+      console.log('Toolbar dimensions:', { width: toolbarWidth, height: toolbarHeight });
 
-      // Check if position is reasonable
-      if (top < 0 || left < 0 || top > window.innerHeight || left > window.innerWidth) {
-        console.warn('Position out of bounds, hiding toolbar');
-        setVisible(false);
-        return;
+      // Final bounds check - ensure toolbar is visible
+      if (top < 0 || top > window.innerHeight - toolbarHeight) {
+        console.warn('Toolbar would be off-screen vertically, trying fallback positioning');
+        
+        // Try positioning below the selection instead
+        const fallbackTop = Math.min(window.innerHeight - toolbarHeight - 10, end.bottom + 8);
+        if (fallbackTop > end.bottom) {
+          setPosition({ top: fallbackTop, left });
+          setVisible(true);
+          console.log('Toolbar positioned below selection:', { top: fallbackTop, left });
+          return;
+        } else {
+          console.warn('No suitable position found, hiding toolbar');
+          setVisible(false);
+          return;
+        }
       }
 
       setPosition({ top, left });

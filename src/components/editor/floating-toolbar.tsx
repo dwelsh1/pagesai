@@ -79,17 +79,12 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       editor.on('selectionUpdate', updatePosition);
       editor.on('transaction', updatePosition);
 
-      // Hide toolbar when editor loses focus
-      editor.on('blur', () => {
-        console.log('Editor blur event - hiding toolbar');
-        setVisible(false);
-      });
+      // Don't hide on blur - let the toolbar stay visible until selection changes
 
       return () => {
         console.log('Cleaning up FloatingToolbar event listeners');
         editor.off('selectionUpdate', updatePosition);
         editor.off('transaction', updatePosition);
-        editor.off('blur', () => setIsVisible(false));
       };
     } catch (error) {
       console.warn('FloatingToolbar event setup error:', error);

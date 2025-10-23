@@ -3,11 +3,10 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
-import Heading from '@tiptap/extension-heading';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
+import { TextStyle } from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import { useCallback, useEffect } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
@@ -88,14 +87,11 @@ export function TipTapEditor({
                 class: '',
               },
             },
+            // Disable extensions that we're adding separately to avoid duplicates
+            underline: false,
+            link: false,
           }),
           Underline,
-          Heading.configure({
-            levels: [1, 2, 3, 4, 5, 6],
-            HTMLAttributes: {
-              class: '',
-            },
-          }),
           Link.configure({
             openOnClick: false,
             HTMLAttributes: {

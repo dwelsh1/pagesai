@@ -1,7 +1,7 @@
 'use client';
 
 import { MainLayout } from '@/components/layout';
-import { PageEditor } from '@/components/editor/page-editor';
+import { SimpleTitleEditor } from '@/components/editor/simple-title-editor';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -49,14 +49,18 @@ export default function EditPagePage({ params }: EditPagePageProps) {
     fetchPage();
   }, [params]);
 
-  const handleSave = async (data: { title: string; content: string; description?: string }) => {
+  const handleSave = async (data: { title: string }) => {
     try {
       const response = await fetch(`/api/pages/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          title: data.title,
+          content: page?.content || '',
+          description: page?.description || '',
+        }),
       });
 
       if (!response.ok) {
@@ -65,6 +69,9 @@ export default function EditPagePage({ params }: EditPagePageProps) {
 
       const { page: updatedPage } = await response.json();
       setPage(updatedPage);
+      
+      // Redirect back to the page view
+      router.push(`/dashboard/page/${params.id}`);
     } catch (error) {
       console.error('Failed to update page:', error);
       throw error;
@@ -72,7 +79,7 @@ export default function EditPagePage({ params }: EditPagePageProps) {
   };
 
   const handleCancel = () => {
-    router.push('/dashboard');
+    router.push(`/dashboard/page/${params.id}`);
   };
 
   if (isLoading) {
@@ -109,14 +116,11 @@ export default function EditPagePage({ params }: EditPagePageProps) {
 
   return (
     <MainLayout>
-      <PageEditor
+      <SimpleTitleEditor
         pageId={page.id}
         initialTitle={page.title}
-        initialContent={page.content}
-        initialDescription={page.description || ''}
         onSave={handleSave}
         onCancel={handleCancel}
-        isEditing={true}
       />
     </MainLayout>
   );

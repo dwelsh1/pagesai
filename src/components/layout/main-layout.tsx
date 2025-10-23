@@ -25,9 +25,36 @@ export function MainLayout({ children }: MainLayoutProps) {
     router.push(`/dashboard/page/${pageId}/edit`);
   };
 
-  const handleDeletePage = (pageId: string) => {
+  const handleDeletePage = async (pageId: string) => {
     console.log('MainLayout: Deleting page:', pageId);
-    // TODO: Implement page deletion with confirmation
+    
+    // Show confirmation dialog
+    const confirmed = window.confirm('Are you sure you want to delete this page? This action cannot be undone.');
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/pages/${pageId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete page');
+      }
+
+      // Show success message
+      alert('Page deleted successfully');
+      
+      // Redirect to dashboard
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Failed to delete page:', error);
+      alert('Failed to delete page. Please try again.');
+    }
   };
 
   return (

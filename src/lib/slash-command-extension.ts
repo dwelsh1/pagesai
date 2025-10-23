@@ -37,7 +37,7 @@ export const SlashCommand = Extension.create<SlashCommandOptions>({
         props: {
           handleKeyDown: (view, event) => {
             if (event.key === '/') {
-              const { state, dispatch } = view;
+              const { state } = view;
               const { selection } = state;
               const { $from } = selection;
               
@@ -47,22 +47,19 @@ export const SlashCommand = Extension.create<SlashCommandOptions>({
               const isAfterSpace = prevChar === ' ' || prevChar === '\n';
               
               if (isAtStart || isAfterSpace) {
-                // Insert the slash character
-                const tr = state.tr.insertText('/');
-                dispatch(tr);
-                
-                // Trigger the slash command
+                // Don't insert the slash, just trigger the command menu
                 setTimeout(() => {
-                  const event = new CustomEvent('slashCommand', {
+                  const customEvent = new CustomEvent('slashCommand', {
                     detail: {
                       editor: this.editor,
-                      position: $from.pos
+                      position: $from.pos,
+                      view: view
                     }
                   });
-                  window.dispatchEvent(event);
+                  window.dispatchEvent(customEvent);
                 }, 0);
                 
-                return true;
+                return true; // Prevent the '/' from being inserted
               }
             }
             return false;

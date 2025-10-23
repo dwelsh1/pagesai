@@ -72,6 +72,7 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
   }, [isOpen, selectedIndex, filteredCommands, onClose]);
 
   const executeCommand = (command: SlashCommand) => {
+    // Execute the command directly
     command.command(editor);
     onClose();
   };

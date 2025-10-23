@@ -45,9 +45,19 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const start = editor.view.coordsAtPos(from);
       const end = editor.view.coordsAtPos(to);
 
-      // Calculate position for the toolbar - improved approach
+      // Calculate position for the toolbar - responsive approach
       const toolbarHeight = 40;
-      const toolbarWidth = 400; // Increased width to accommodate more buttons
+      const viewportWidth = window.innerWidth;
+      
+      // Responsive toolbar width based on viewport
+      let toolbarWidth;
+      if (viewportWidth < 768) {
+        toolbarWidth = Math.min(viewportWidth - 40, 350); // Mobile: smaller toolbar
+      } else if (viewportWidth < 1024) {
+        toolbarWidth = Math.min(viewportWidth - 60, 450); // Tablet: medium toolbar
+      } else {
+        toolbarWidth = Math.min(viewportWidth - 80, 500); // Desktop: full toolbar
+      }
       
       // Calculate center position of selection
       const selectionCenter = (start.left + end.left) / 2;
@@ -58,15 +68,20 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       // Calculate left position with viewport bounds checking
       let left = selectionCenter - toolbarWidth / 2;
       
-      // Ensure toolbar stays within viewport bounds
-      const viewportWidth = window.innerWidth;
-      const minLeft = 10;
-      const maxLeft = viewportWidth - toolbarWidth - 10;
+      // Ensure toolbar stays within viewport bounds with more margin
+      const margin = 20; // Increased margin for better visibility
+      const minLeft = margin;
+      const maxLeft = viewportWidth - toolbarWidth - margin;
       
       if (left < minLeft) {
         left = minLeft;
       } else if (left > maxLeft) {
         left = maxLeft;
+      }
+      
+      // Additional check: if toolbar would still be cut off, try centering it
+      if (left + toolbarWidth > viewportWidth - margin) {
+        left = Math.max(margin, viewportWidth - toolbarWidth - margin);
       }
 
       console.log('Start coords:', start);
@@ -112,17 +127,26 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       editor.on('selectionUpdate', updatePosition);
       editor.on('transaction', updatePosition);
 
+      // Add window resize listener to recalculate positioning
+      const handleResize = () => {
+        if (isVisible) {
+          updatePosition();
+        }
+      };
+      window.addEventListener('resize', handleResize);
+
       // Don't hide on blur - let the toolbar stay visible until selection changes
 
       return () => {
         console.log('Cleaning up FloatingToolbar event listeners');
         editor.off('selectionUpdate', updatePosition);
         editor.off('transaction', updatePosition);
+        window.removeEventListener('resize', handleResize);
       };
     } catch (error) {
       console.warn('FloatingToolbar event setup error:', error);
     }
-  }, [editor, updatePosition]);
+  }, [editor, updatePosition, isVisible]);
 
   if (!isVisible || !editor) {
     return (

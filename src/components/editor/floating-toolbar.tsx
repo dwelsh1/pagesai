@@ -242,6 +242,26 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
           >
             <span className="text-sm font-bold">H3</span>
           </button>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('Paragraph button clicked');
+                editor.chain().focus().setParagraph().run();
+                console.log('Paragraph command executed');
+              } catch (error) {
+                console.warn('Paragraph toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('paragraph') 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Normal Text (Paragraph)"
+          >
+            <span className="text-sm font-bold">P</span>
+          </button>
     </div>
   );
 }

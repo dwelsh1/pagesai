@@ -379,7 +379,6 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             }
           }}
         />
-      </div>
-    </>
-  );
-}
+      </>
+    );
+  }

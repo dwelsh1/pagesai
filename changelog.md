@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.4.0] - 2025-01-19
+
+### Added
+- **Complete TipTap Floating Toolbar Implementation**
+- 18 fully functional toolbar buttons with proper positioning
+- Text formatting: Bold, Italic, Underline, Code
+- Structure elements: Headings (H1-H3), Paragraph, Lists, Blockquote
+- Text alignment: Left, Center, Right, Justify (all working!)
+- Link and Image functionality with custom modals
+- File explorer support for image uploads
+- Custom styled modals replacing browser prompts
+- Responsive toolbar positioning for all screen sizes
+- Comprehensive CSS overrides for proper text alignment
+
+### Fixed
+- TextStyle import errors and duplicate extension warnings
+- Toolbar cut-off issues across all screen sizes
+- Floating toolbar positioning for all alignments
+- Proper bounds checking for all viewport sizes
+- Text alignment rendering issues
+
+### Changed
+- Replaced browser native prompts with styled custom modals
+- Enhanced editor functionality with rich text capabilities
+- Improved user experience with professional toolbar interface
+
 ## [0.3.0] - 2024-12-19
 
 ### Added

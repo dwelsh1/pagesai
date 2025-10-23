@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote, Link, Image } from 'lucide-react';
 import { LinkModal } from './link-modal';
+import { ImageModal } from './image-modal';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -13,6 +14,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [showLinkModal, setShowLinkModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   // Wrapper to track setIsVisible calls
   const setVisible = (visible: boolean) => {
@@ -105,6 +107,19 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
               console.log('Link command executed with URL:', url);
             } catch (error) {
               console.warn('Link command error:', error);
+            }
+          }}
+        />
+
+        <ImageModal
+          isOpen={showImageModal}
+          onClose={() => setShowImageModal(false)}
+          onConfirm={(url) => {
+            try {
+              editor.chain().focus().setImage({ src: url }).run();
+              console.log('Image command executed with URL:', url);
+            } catch (error) {
+              console.warn('Image command error:', error);
             }
           }}
         />
@@ -370,11 +385,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             onClick={() => {
               try {
                 console.log('Image button clicked');
-                const url = window.prompt('Enter image URL:');
-                if (url) {
-                  editor.chain().focus().setImage({ src: url }).run();
-                  console.log('Image command executed with URL:', url);
-                }
+                setShowImageModal(true);
               } catch (error) {
                 console.warn('Image toggle error:', error);
               }
@@ -395,6 +406,19 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
               console.log('Link command executed with URL:', url);
             } catch (error) {
               console.warn('Link command error:', error);
+            }
+          }}
+        />
+
+        <ImageModal
+          isOpen={showImageModal}
+          onClose={() => setShowImageModal(false)}
+          onConfirm={(url) => {
+            try {
+              editor.chain().focus().setImage({ src: url }).run();
+              console.log('Image command executed with URL:', url);
+            } catch (error) {
+              console.warn('Image command error:', error);
             }
           }}
         />

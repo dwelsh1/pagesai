@@ -89,9 +89,9 @@ export function TipTapEditor({
       }),
       Underline,
       Link.configure({
-        openOnClick: false,
+        openOnClick: true,
         HTMLAttributes: {
-          class: 'text-blue-600 underline',
+          class: 'text-blue-600 underline cursor-pointer',
         },
       }),
       Image.configure({
@@ -171,7 +171,10 @@ export function TipTapEditor({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (slashCommandOpen && editorRef.current && !editorRef.current.contains(event.target as Node)) {
-        setSlashCommandOpen(false);
+        // Add a small delay to allow click events to fire first
+        setTimeout(() => {
+          setSlashCommandOpen(false);
+        }, 100);
       }
     };
 

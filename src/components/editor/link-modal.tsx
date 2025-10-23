@@ -17,18 +17,20 @@ export function LinkModal({ editor, isOpen, onClose }: LinkModalProps) {
   const handleSubmit = () => {
     if (url.trim()) {
       // If there's selected text, use it as link text, otherwise use the provided text
-      const text = linkText.trim() || editor.state.doc.textBetween(
+      const selectedText = editor.state.doc.textBetween(
         editor.state.selection.from,
         editor.state.selection.to,
         ' '
       );
       
-      if (text) {
+      const displayText = linkText.trim() || selectedText || url.trim();
+      
+      if (selectedText) {
         // Replace selected text with link
-        editor.chain().focus().insertContent(`<a href="${url.trim()}">${text}</a>`).run();
+        editor.chain().focus().setLink({ href: url.trim() }).run();
       } else {
-        // Insert link with URL as text
-        editor.chain().focus().insertContent(`<a href="${url.trim()}">${url.trim()}</a>`).run();
+        // Insert link with custom text
+        editor.chain().focus().insertContent(`<a href="${url.trim()}">${displayText}</a>`).run();
       }
     }
     setUrl('');

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote, Link, Image } from 'lucide-react';
+import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote, Link, Image, AlignLeft, AlignCenter, AlignRight, AlignJustify } from 'lucide-react';
 import { LinkModal } from './link-modal';
 import { ImageModal } from './image-modal';
 
@@ -358,6 +358,80 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             title="Quote (Blockquote)"
           >
             <Quote size={16} />
+          </button>
+
+          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+          <button
+            onClick={() => {
+              try {
+                editor.chain().focus().setTextAlign('left').run();
+              } catch (error) {
+                console.warn('Text align left error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive({ textAlign: 'left' }) 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Align Left"
+          >
+            <AlignLeft size={16} />
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                editor.chain().focus().setTextAlign('center').run();
+              } catch (error) {
+                console.warn('Text align center error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive({ textAlign: 'center' }) 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Align Center"
+          >
+            <AlignCenter size={16} />
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                editor.chain().focus().setTextAlign('right').run();
+              } catch (error) {
+                console.warn('Text align right error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive({ textAlign: 'right' }) 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Align Right"
+          >
+            <AlignRight size={16} />
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                editor.chain().focus().setTextAlign('justify').run();
+              } catch (error) {
+                console.warn('Text align justify error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive({ textAlign: 'justify' }) 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Justify"
+          >
+            <AlignJustify size={16} />
           </button>
 
           <div className="w-px h-6 bg-gray-300 mx-1"></div>

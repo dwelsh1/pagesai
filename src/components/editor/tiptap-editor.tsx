@@ -6,6 +6,9 @@ import Underline from '@tiptap/extension-underline';
 import Heading from '@tiptap/extension-heading';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
 import { useCallback, useEffect } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
 import { FloatingToolbar } from './floating-toolbar';
@@ -103,6 +106,13 @@ export function TipTapEditor({
             HTMLAttributes: {
               class: 'max-w-full h-auto rounded-lg',
             },
+          }),
+          TextAlign.configure({
+            types: ['heading', 'paragraph'],
+          }),
+          TextStyle,
+          Color.configure({
+            types: ['textStyle'],
           }),
         ],
     content: htmlContent,

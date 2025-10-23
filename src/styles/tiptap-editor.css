@@ -205,3 +205,24 @@
   margin: 0.5em 0 !important;
   display: block !important;
 }
+
+/* Text alignment styles */
+.tiptap-editor .ProseMirror .has-focus {
+  outline: none !important;
+}
+
+.tiptap-editor .ProseMirror [style*="text-align: left"] {
+  text-align: left !important;
+}
+
+.tiptap-editor .ProseMirror [style*="text-align: center"] {
+  text-align: center !important;
+}
+
+.tiptap-editor .ProseMirror [style*="text-align: right"] {
+  text-align: right !important;
+}
+
+.tiptap-editor .ProseMirror [style*="text-align: justify"] {
+  text-align: justify !important;
+}

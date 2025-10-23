@@ -1,6 +1,5 @@
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
-import { Decoration, DecorationSet } from '@tiptap/pm/view';
 
 export interface SlashCommandOptions {
   suggestion: {
@@ -33,7 +32,7 @@ export const SlashCommand = Extension.create<SlashCommandOptions>({
 
   addProseMirrorPlugins() {
     return [
-      Plugin.create({
+      new Plugin({
         key: new PluginKey('slashCommand'),
         props: {
           handleKeyDown: (view, event) => {

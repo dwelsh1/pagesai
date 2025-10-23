@@ -3,7 +3,6 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
-import Heading from '@tiptap/extension-heading';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
@@ -88,12 +87,6 @@ export function TipTapEditor({
         link: false,
       }),
       Underline,
-      Heading.configure({
-        levels: [1, 2, 3],
-        HTMLAttributes: {
-          class: '',
-        },
-      }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {

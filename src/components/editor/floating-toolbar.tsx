@@ -113,13 +113,14 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   }
 
   return (
-    <div
-      className="fixed z-50 flex items-center gap-1 p-1 bg-white border border-gray-200 rounded-lg shadow-lg"
-      style={{
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-      }}
-    >
+    <>
+      <div
+        className="fixed z-50 flex items-center gap-1 p-1 bg-white border border-gray-200 rounded-lg shadow-lg"
+        style={{
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+        }}
+      >
       <button
         onClick={() => {
           try {
@@ -365,20 +366,20 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             <Link size={16} />
           </button>
         </div>
-      )}
 
-      <LinkModal
-        isOpen={showLinkModal}
-        onClose={() => setShowLinkModal(false)}
-        onConfirm={(url) => {
-          try {
-            editor.chain().focus().setLink({ href: url }).run();
-            console.log('Link command executed with URL:', url);
-          } catch (error) {
-            console.warn('Link command error:', error);
-          }
-        }}
-      />
+        <LinkModal
+          isOpen={showLinkModal}
+          onClose={() => setShowLinkModal(false)}
+          onConfirm={(url) => {
+            try {
+              editor.chain().focus().setLink({ href: url }).run();
+              console.log('Link command executed with URL:', url);
+            } catch (error) {
+              console.warn('Link command error:', error);
+            }
+          }}
+        />
+      </div>
     </>
   );
 }

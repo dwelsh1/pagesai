@@ -35,22 +35,25 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const start = editor.view.coordsAtPos(from);
       const end = editor.view.coordsAtPos(to);
 
-      // Calculate position for the toolbar
+      // Calculate position for the toolbar - simplified approach
       const toolbarHeight = 40;
       const toolbarWidth = 120;
       
-      // Get editor container bounds
-      const editorRect = editor.view.dom.getBoundingClientRect();
-      
-      const top = Math.max(0, start.top - editorRect.top - toolbarHeight - 8);
-      const left = Math.max(0, Math.min(
-        (start.left + end.left) / 2 - editorRect.left - toolbarWidth / 2,
-        editorRect.width - toolbarWidth - 16
-      ));
+      // Use simpler positioning - just above the selection
+      const top = Math.max(0, start.top - toolbarHeight - 8);
+      const left = Math.max(0, (start.left + end.left) / 2 - toolbarWidth / 2);
 
-      console.log('Editor rect:', editorRect);
       console.log('Start coords:', start);
+      console.log('End coords:', end);
       console.log('Calculated position:', { top, left });
+      console.log('Window dimensions:', { width: window.innerWidth, height: window.innerHeight });
+
+      // Check if position is reasonable
+      if (top < 0 || left < 0 || top > window.innerHeight || left > window.innerWidth) {
+        console.warn('Position out of bounds, hiding toolbar');
+        setIsVisible(false);
+        return;
+      }
 
       setPosition({ top, left });
       setIsVisible(true);
@@ -90,7 +93,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
 
   return (
     <div
-      className="absolute z-50 flex items-center gap-1 p-1 bg-white border border-gray-200 rounded-lg shadow-lg"
+      className="fixed z-50 flex items-center gap-1 p-1 bg-white border border-gray-200 rounded-lg shadow-lg"
       style={{
         top: `${position.top}px`,
         left: `${position.left}px`,

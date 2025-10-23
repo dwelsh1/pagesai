@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote } from 'lucide-react';
+import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote, Link } from 'lucide-react';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -325,6 +325,31 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             title="Quote (Blockquote)"
           >
             <Quote size={16} />
+          </button>
+
+          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('Link button clicked');
+                const url = window.prompt('Enter URL:');
+                if (url) {
+                  editor.chain().focus().setLink({ href: url }).run();
+                  console.log('Link command executed with URL:', url);
+                }
+              } catch (error) {
+                console.warn('Link toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('link') 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Add Link"
+          >
+            <Link size={16} />
           </button>
     </div>
   );

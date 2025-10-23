@@ -185,3 +185,14 @@
   font-style: italic !important;
   color: #666 !important;
 }
+
+/* Link styles */
+.tiptap-editor .ProseMirror a {
+  color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+
+.tiptap-editor .ProseMirror a:hover {
+  color: #1d4ed8 !important;
+}

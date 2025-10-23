@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Code, Underline } from 'lucide-react';
+import { Bold, Italic, Code, Underline, Type } from 'lucide-react';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -179,6 +179,68 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             title="Underline (Ctrl+U)"
           >
             <Underline size={16} />
+          </button>
+
+          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('H1 button clicked');
+                editor.chain().focus().toggleHeading({ level: 1 }).run();
+                console.log('H1 command executed');
+              } catch (error) {
+                console.warn('H1 toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('heading', { level: 1 }) 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Heading 1"
+          >
+            <span className="text-sm font-bold">H1</span>
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('H2 button clicked');
+                editor.chain().focus().toggleHeading({ level: 2 }).run();
+                console.log('H2 command executed');
+              } catch (error) {
+                console.warn('H2 toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('heading', { level: 2 }) 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Heading 2"
+          >
+            <span className="text-sm font-bold">H2</span>
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('H3 button clicked');
+                editor.chain().focus().toggleHeading({ level: 3 }).run();
+                console.log('H3 command executed');
+              } catch (error) {
+                console.warn('H3 toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('heading', { level: 3 }) 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Heading 3"
+          >
+            <span className="text-sm font-bold">H3</span>
           </button>
     </div>
   );

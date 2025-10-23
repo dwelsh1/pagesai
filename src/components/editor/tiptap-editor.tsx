@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
+import Heading from '@tiptap/extension-heading';
 import { useCallback, useEffect } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
 import { FloatingToolbar } from './floating-toolbar';
@@ -84,6 +85,12 @@ export function TipTapEditor({
             },
           }),
           Underline,
+          Heading.configure({
+            levels: [1, 2, 3, 4, 5, 6],
+            HTMLAttributes: {
+              class: '',
+            },
+          }),
         ],
     content: htmlContent,
     editable,

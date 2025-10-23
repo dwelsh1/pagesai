@@ -144,6 +144,7 @@ export function TipTapEditor({
   // Handle slash command events
   useEffect(() => {
     const handleSlashCommand = (event: CustomEvent) => {
+      console.log('🎯 Slash command event received:', event.detail);
       if (!editorRef.current) return;
       
       const rect = editorRef.current.getBoundingClientRect();
@@ -152,8 +153,10 @@ export function TipTapEditor({
         left: rect.left + 20, // Position to the left of the editor
       };
       
+      console.log('🎯 Setting slash command position:', position);
       setSlashCommandPosition(position);
       setSlashCommandOpen(true);
+      console.log('🎯 Slash command menu opened');
     };
 
     window.addEventListener('slashCommand', handleSlashCommand as EventListener);

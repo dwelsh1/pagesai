@@ -72,14 +72,37 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
   }, [isOpen, selectedIndex, filteredCommands, onClose]);
 
   const executeCommand = (command: SlashCommand) => {
+    console.log('🎯 Executing command:', command.title);
+    console.log('🎯 Editor state before command:', {
+      hasFocus: editor.isFocused,
+      selection: editor.state.selection,
+      content: editor.getHTML()
+    });
+    
     // Execute the command directly
     command.command(editor);
     
+    console.log('🎯 Editor state after command:', {
+      hasFocus: editor.isFocused,
+      selection: editor.state.selection,
+      content: editor.getHTML()
+    });
+    
     // Ensure editor maintains focus and cursor is visible
     setTimeout(() => {
+      console.log('🎯 Attempting to restore focus...');
       editor.commands.focus();
+      console.log('🎯 Editor state after focus:', {
+        hasFocus: editor.isFocused,
+        selection: editor.state.selection
+      });
+      
       // Force a re-render to ensure cursor is visible
       editor.view.updateState(editor.view.state);
+      console.log('🎯 Editor state after updateState:', {
+        hasFocus: editor.isFocused,
+        selection: editor.state.selection
+      });
     }, 50);
     
     onClose();

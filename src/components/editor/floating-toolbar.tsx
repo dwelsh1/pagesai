@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Code, Underline, Type } from 'lucide-react';
+import { Bold, Italic, Code, Underline, Type, List, ListOrdered } from 'lucide-react';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -261,6 +261,48 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             title="Normal Text (Paragraph)"
           >
             <span className="text-sm font-bold">P</span>
+          </button>
+
+          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('Bullet List button clicked');
+                editor.chain().focus().toggleBulletList().run();
+                console.log('Bullet List command executed');
+              } catch (error) {
+                console.warn('Bullet List toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('bulletList') 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Bullet List"
+          >
+            <List size={16} />
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('Ordered List button clicked');
+                editor.chain().focus().toggleOrderedList().run();
+                console.log('Ordered List command executed');
+              } catch (error) {
+                console.warn('Ordered List toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('orderedList') 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Numbered List"
+          >
+            <ListOrdered size={16} />
           </button>
     </div>
   );

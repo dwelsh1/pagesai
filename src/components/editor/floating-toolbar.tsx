@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Code } from 'lucide-react';
+import { Bold, Italic, Code, Underline } from 'lucide-react';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -143,23 +143,43 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
         <Italic size={16} />
       </button>
 
-      <button
-        onClick={() => {
-          try {
-            editor.chain().focus().toggleCode().run();
-          } catch (error) {
-            console.warn('Code toggle error:', error);
-          }
-        }}
-        className={`p-2 rounded-md transition-colors duration-200 ${
-          editor.isActive('code') 
-            ? 'bg-blue-100 text-blue-700 border border-blue-200' 
-            : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
-        }`}
-        title="Code (Ctrl+E)"
-      >
-        <Code size={16} />
-      </button>
+          <button
+            onClick={() => {
+              try {
+                editor.chain().focus().toggleCode().run();
+              } catch (error) {
+                console.warn('Code toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('code') 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Code (Ctrl+E)"
+          >
+            <Code size={16} />
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('Underline button clicked, editor active:', editor.isActive('underline'));
+                editor.chain().focus().toggleUnderline().run();
+                console.log('Underline command executed, now active:', editor.isActive('underline'));
+              } catch (error) {
+                console.warn('Underline toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('underline') 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Underline (Ctrl+U)"
+          >
+            <Underline size={16} />
+          </button>
     </div>
   );
 }

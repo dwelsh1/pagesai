@@ -117,3 +117,7 @@
 .tiptap-editor .ProseMirror i {
   font-style: italic !important;
 }
+
+.tiptap-editor .ProseMirror u {
+  text-decoration: underline !important;
+}

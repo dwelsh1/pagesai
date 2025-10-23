@@ -2,6 +2,7 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
 import { useCallback, useEffect } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
 import { FloatingToolbar } from './floating-toolbar';
@@ -26,63 +27,64 @@ export function TipTapEditor({
     ? blockNoteToHtml(content) 
     : content;
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        // Disable default styling that creates boxes
-        paragraph: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        heading: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        bulletList: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        orderedList: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        listItem: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        blockquote: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        codeBlock: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        code: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        // Ensure bold, italic, and code are enabled
-        bold: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        italic: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-      }),
-    ],
+      const editor = useEditor({
+        extensions: [
+          StarterKit.configure({
+            // Disable default styling that creates boxes
+            paragraph: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            heading: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            bulletList: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            orderedList: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            listItem: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            blockquote: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            codeBlock: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            code: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            // Ensure bold, italic, and code are enabled
+            bold: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            italic: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+          }),
+          Underline,
+        ],
     content: htmlContent,
     editable,
     immediatelyRender: true,

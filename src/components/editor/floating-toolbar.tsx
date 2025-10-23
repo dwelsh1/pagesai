@@ -45,43 +45,38 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const start = editor.view.coordsAtPos(from);
       const end = editor.view.coordsAtPos(to);
 
-      // Calculate position for the toolbar - responsive approach
+      // Calculate position for the toolbar - aggressive bounds checking approach
       const toolbarHeight = 40;
       const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
       
-      // Responsive toolbar width based on viewport - more conservative approach
-      let toolbarWidth;
-      if (viewportWidth < 768) {
-        toolbarWidth = Math.min(viewportWidth - 60, 300); // Mobile: smaller toolbar with more margin
-      } else if (viewportWidth < 1024) {
-        toolbarWidth = Math.min(viewportWidth - 80, 400); // Tablet: medium toolbar with more margin
-      } else {
-        toolbarWidth = Math.min(viewportWidth - 100, 480); // Desktop: full toolbar with more margin
-      }
+      // Fixed toolbar width to ensure all buttons fit
+      const toolbarWidth = 520; // Fixed width to accommodate all 18 buttons
       
       // Calculate center position of selection
       const selectionCenter = (start.left + end.left) / 2;
       
-      // Position toolbar above selection with better bounds checking
-      const top = Math.max(10, start.top - toolbarHeight - 16);
+      // Position toolbar above selection with aggressive bounds checking
+      const top = Math.max(20, start.top - toolbarHeight - 20);
       
-      // Calculate left position with viewport bounds checking
+      // Calculate left position with aggressive bounds checking
       let left = selectionCenter - toolbarWidth / 2;
       
-      // Ensure toolbar stays within viewport bounds with more margin
-      const margin = 30; // Increased margin for better visibility
+      // Aggressive margin to prevent any cut-off
+      const margin = 50; // Large margin to ensure visibility
       const minLeft = margin;
       const maxLeft = viewportWidth - toolbarWidth - margin;
       
+      // Force toolbar to stay within bounds
       if (left < minLeft) {
         left = minLeft;
       } else if (left > maxLeft) {
         left = maxLeft;
       }
       
-      // Additional check: if toolbar would still be cut off, try centering it
-      if (left + toolbarWidth > viewportWidth - margin) {
-        left = Math.max(margin, viewportWidth - toolbarWidth - margin);
+      // Final safety check - if still too close to edge, center it
+      if (left < margin || left + toolbarWidth > viewportWidth - margin) {
+        left = Math.max(margin, Math.min(maxLeft, (viewportWidth - toolbarWidth) / 2));
       }
 
       console.log('Start coords:', start);
@@ -472,9 +467,19 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             <button
               onClick={() => {
                 try {
-                  console.log('Justify button clicked, editor active:', editor.isActive({ textAlign: 'justify' }));
-                  editor.chain().focus().setTextAlign('justify').run();
-                  console.log('Justify command executed, now active:', editor.isActive({ textAlign: 'justify' }));
+                  console.log('Justify button clicked');
+                  console.log('Editor commands available:', editor.commands);
+                  console.log('TextAlign extension loaded:', editor.extensionManager.extensions.find(ext => ext.name === 'textAlign'));
+                  
+                  const result = editor.chain().focus().setTextAlign('justify').run();
+                  console.log('Justify command result:', result);
+                  console.log('Editor active state:', editor.isActive({ textAlign: 'justify' }));
+                  
+                  // Force update to see if alignment changed
+                  setTimeout(() => {
+                    console.log('After timeout - active state:', editor.isActive({ textAlign: 'justify' }));
+                    console.log('Current HTML:', editor.getHTML());
+                  }, 100);
                 } catch (error) {
                   console.warn('Text align justify error:', error);
                 }

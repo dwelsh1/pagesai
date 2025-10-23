@@ -226,3 +226,12 @@
 .tiptap-editor .ProseMirror [style*="text-align: justify"] {
   text-align: justify !important;
 }
+
+/* Additional justify alignment support */
+.tiptap-editor .ProseMirror .text-align[style*="justify"],
+.tiptap-editor .ProseMirror p[style*="justify"],
+.tiptap-editor .ProseMirror h1[style*="justify"],
+.tiptap-editor .ProseMirror h2[style*="justify"],
+.tiptap-editor .ProseMirror h3[style*="justify"] {
+  text-align: justify !important;
+}

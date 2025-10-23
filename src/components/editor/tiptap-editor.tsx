@@ -2,8 +2,15 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
+import { TextStyle } from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
 import { useCallback, useEffect } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
+import { FloatingToolbar } from './floating-toolbar';
 import '@/styles/tiptap-editor.css';
 
 interface TipTapEditorProps {
@@ -25,52 +32,85 @@ export function TipTapEditor({
     ? blockNoteToHtml(content) 
     : content;
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        // Disable default styling that creates boxes
-        paragraph: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        heading: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        bulletList: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        orderedList: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        listItem: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        blockquote: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        codeBlock: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-        code: {
-          HTMLAttributes: {
-            class: '',
-          },
-        },
-      }),
-    ],
+      const editor = useEditor({
+        extensions: [
+          StarterKit.configure({
+            // Disable default styling that creates boxes
+            paragraph: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            heading: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            bulletList: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            orderedList: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            listItem: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            blockquote: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            codeBlock: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            code: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            // Ensure bold, italic, and code are enabled
+            bold: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            italic: {
+              HTMLAttributes: {
+                class: '',
+              },
+            },
+            // Disable extensions that we're adding separately to avoid duplicates
+            underline: false,
+            link: false,
+          }),
+          Underline,
+          Link.configure({
+            openOnClick: false,
+            HTMLAttributes: {
+              class: 'text-blue-600 underline',
+            },
+          }),
+          Image.configure({
+            HTMLAttributes: {
+              class: 'max-w-full h-auto rounded-lg',
+            },
+          }),
+          TextAlign.configure({
+            types: ['heading', 'paragraph'],
+          }),
+          TextStyle,
+          Color.configure({
+            types: ['textStyle'],
+          }),
+        ],
     content: htmlContent,
     editable,
     immediatelyRender: true,
@@ -122,6 +162,7 @@ export function TipTapEditor({
         className="h-full w-full focus:outline-none p-0 m-0 border-0"
         style={{ background: 'transparent', border: 'none', outline: 'none' }}
       />
+      <FloatingToolbar editor={editor} />
     </div>
   );
 }

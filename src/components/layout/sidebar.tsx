@@ -28,7 +28,7 @@ interface SidebarProps {
   pages?: Page[];
   onCreatePage?: () => void;
   onEditPage?: (pageId: string) => void;
-  onDeletePage?: (pageId: string) => void;
+  onDeletePage?: (pageId: string, pageTitle: string) => void;
 }
 
 export function Sidebar({ 
@@ -186,7 +186,7 @@ export function Sidebar({
                 </button>
                 <button
                   onClick={() => {
-                    onDeletePage?.(page.id);
+                    onDeletePage?.(page.id, page.title);
                     setShowContextMenu(null);
                   }}
                   className="flex items-center w-full px-3 py-1 text-sm text-red-600 hover:bg-gray-100"

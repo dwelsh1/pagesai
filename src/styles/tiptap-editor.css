@@ -106,3 +106,13 @@
   background: none !important;
   padding: 0 !important;
 }
+
+/* Slash command decoration */
+.slash-command-decoration {
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-family: monospace;
+  color: #6b7280;
+  font-size: 0.875rem;
+}

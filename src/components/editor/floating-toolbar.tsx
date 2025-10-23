@@ -49,14 +49,14 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const toolbarHeight = 40;
       const viewportWidth = window.innerWidth;
       
-      // Responsive toolbar width based on viewport
+      // Responsive toolbar width based on viewport - more conservative approach
       let toolbarWidth;
       if (viewportWidth < 768) {
-        toolbarWidth = Math.min(viewportWidth - 40, 350); // Mobile: smaller toolbar
+        toolbarWidth = Math.min(viewportWidth - 60, 300); // Mobile: smaller toolbar with more margin
       } else if (viewportWidth < 1024) {
-        toolbarWidth = Math.min(viewportWidth - 60, 450); // Tablet: medium toolbar
+        toolbarWidth = Math.min(viewportWidth - 80, 400); // Tablet: medium toolbar with more margin
       } else {
-        toolbarWidth = Math.min(viewportWidth - 80, 500); // Desktop: full toolbar
+        toolbarWidth = Math.min(viewportWidth - 100, 480); // Desktop: full toolbar with more margin
       }
       
       // Calculate center position of selection
@@ -69,7 +69,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       let left = selectionCenter - toolbarWidth / 2;
       
       // Ensure toolbar stays within viewport bounds with more margin
-      const margin = 20; // Increased margin for better visibility
+      const margin = 30; // Increased margin for better visibility
       const minLeft = margin;
       const maxLeft = viewportWidth - toolbarWidth - margin;
       
@@ -469,23 +469,25 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             <AlignRight size={16} />
           </button>
 
-          <button
-            onClick={() => {
-              try {
-                editor.chain().focus().setTextAlign('justify').run();
-              } catch (error) {
-                console.warn('Text align justify error:', error);
-              }
-            }}
-            className={`p-2 rounded-md transition-colors duration-200 ${
-              editor.isActive({ textAlign: 'justify' }) 
-                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
-                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
-            }`}
-            title="Justify"
-          >
-            <AlignJustify size={16} />
-          </button>
+            <button
+              onClick={() => {
+                try {
+                  console.log('Justify button clicked, editor active:', editor.isActive({ textAlign: 'justify' }));
+                  editor.chain().focus().setTextAlign('justify').run();
+                  console.log('Justify command executed, now active:', editor.isActive({ textAlign: 'justify' }));
+                } catch (error) {
+                  console.warn('Text align justify error:', error);
+                }
+              }}
+              className={`p-2 rounded-md transition-colors duration-200 ${
+                editor.isActive({ textAlign: 'justify' }) 
+                  ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                  : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+              }`}
+              title="Justify"
+            >
+              <AlignJustify size={16} />
+            </button>
 
           <div className="w-px h-6 bg-gray-300 mx-1"></div>
 

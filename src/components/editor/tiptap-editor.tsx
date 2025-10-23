@@ -109,6 +109,8 @@ export function TipTapEditor({
           }),
           TextAlign.configure({
             types: ['heading', 'paragraph'],
+            alignments: ['left', 'center', 'right', 'justify'],
+            defaultAlignment: 'left',
           }),
           TextStyle,
           Color.configure({

@@ -72,7 +72,7 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
   }, [isOpen, selectedIndex, filteredCommands, onClose]);
 
   const executeCommand = (command: SlashCommand) => {
-    console.log('🎯 Executing command:', command.title);
+    console.log('🎯 EXECUTE COMMAND CALLED:', command.title);
     console.log('🎯 Editor state before command:', {
       hasFocus: editor.isFocused,
       selection: editor.state.selection,
@@ -136,6 +136,8 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
   };
 
   if (!isOpen) return null;
+
+  console.log('🎯 SlashCommandMenu rendering:', { isOpen, filteredCommands: filteredCommands.length });
 
   return (
     <div

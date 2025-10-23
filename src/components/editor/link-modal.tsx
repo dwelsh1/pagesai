@@ -12,17 +12,33 @@ interface LinkModalProps {
 
 export function LinkModal({ editor, isOpen, onClose }: LinkModalProps) {
   const [url, setUrl] = useState('');
+  const [linkText, setLinkText] = useState('');
 
   const handleSubmit = () => {
     if (url.trim()) {
-      editor.chain().focus().setLink({ href: url.trim() }).run();
+      // If there's selected text, use it as link text, otherwise use the provided text
+      const text = linkText.trim() || editor.state.doc.textBetween(
+        editor.state.selection.from,
+        editor.state.selection.to,
+        ' '
+      );
+      
+      if (text) {
+        // Replace selected text with link
+        editor.chain().focus().insertContent(`<a href="${url.trim()}">${text}</a>`).run();
+      } else {
+        // Insert link with URL as text
+        editor.chain().focus().insertContent(`<a href="${url.trim()}">${url.trim()}</a>`).run();
+      }
     }
     setUrl('');
+    setLinkText('');
     onClose();
   };
 
   const handleClose = () => {
     setUrl('');
+    setLinkText('');
     onClose();
   };
 
@@ -51,6 +67,19 @@ export function LinkModal({ editor, isOpen, onClose }: LinkModalProps) {
         </div>
 
         <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Link Text
+            </label>
+            <input
+              type="text"
+              value={linkText}
+              onChange={(e) => setLinkText(e.target.value)}
+              placeholder="Text to display (optional)"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               URL

@@ -21,6 +21,8 @@ import {
   Link, 
   Image 
 } from 'lucide-react';
+import { LinkModal } from './link-modal';
+import { ImageModal } from './image-modal';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -29,6 +31,8 @@ interface FloatingToolbarProps {
 export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const updatePosition = () => {
@@ -54,7 +58,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       console.log('Start coords:', start);
       console.log('End coords:', end);
 
-      const toolbarWidth = 580; // Increased width
+      const toolbarWidth = 700; // Further increased width to fit all buttons
       const toolbarHeight = 40;
       const margin = 50; // Increased margin
 
@@ -123,7 +127,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       style={{
         top: position.top,
         left: position.left,
-        width: '580px',
+        width: '700px',
       }}
     >
       {/* Formatting */}
@@ -266,12 +270,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
 
       {/* Media */}
       <button
-        onClick={() => {
-          const url = window.prompt('URL:');
-          if (url) {
-            editor.chain().focus().setLink({ href: url }).run();
-          }
-        }}
+        onClick={() => setLinkModalOpen(true)}
         className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('link') ? 'bg-gray-200' : ''}`}
         title="Link"
       >
@@ -279,17 +278,26 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       </button>
       
       <button
-        onClick={() => {
-          const url = window.prompt('Image URL:');
-          if (url) {
-            editor.chain().focus().setImage({ src: url }).run();
-          }
-        }}
+        onClick={() => setImageModalOpen(true)}
         className="p-2 rounded hover:bg-gray-100"
         title="Image"
       >
         <Image className="w-4 h-4" />
       </button>
     </div>
-  );
+    
+    {/* Modals */}
+    <LinkModal
+      editor={editor}
+      isOpen={linkModalOpen}
+      onClose={() => setLinkModalOpen(false)}
+    />
+    
+    <ImageModal
+      editor={editor}
+      isOpen={imageModalOpen}
+      onClose={() => setImageModalOpen(false)}
+    />
+  </div>
+);
 }

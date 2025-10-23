@@ -186,7 +186,10 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
                     className={`px-3 py-2 cursor-pointer border-b border-gray-50 last:border-b-0 ${
                       isSelected ? 'bg-blue-50' : 'hover:bg-gray-50'
                     }`}
-                    onClick={() => executeCommand(command)}
+                    onClick={() => {
+                      console.log('🎯 Command clicked:', command.title);
+                      executeCommand(command);
+                    }}
                     onMouseEnter={() => setSelectedIndex(globalIndex)}
                   >
                     <div className="flex items-center gap-3">

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote, Link } from 'lucide-react';
+import { LinkModal } from './link-modal';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -11,6 +12,7 @@ interface FloatingToolbarProps {
 export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [showLinkModal, setShowLinkModal] = useState(false);
 
   // Wrapper to track setIsVisible calls
   const setVisible = (visible: boolean) => {
@@ -92,7 +94,22 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   }, [editor, updatePosition]);
 
   if (!isVisible || !editor) {
-    return null;
+    return (
+      <>
+        <LinkModal
+          isOpen={showLinkModal}
+          onClose={() => setShowLinkModal(false)}
+          onConfirm={(url) => {
+            try {
+              editor.chain().focus().setLink({ href: url }).run();
+              console.log('Link command executed with URL:', url);
+            } catch (error) {
+              console.warn('Link command error:', error);
+            }
+          }}
+        />
+      </>
+    );
   }
 
   return (
@@ -333,11 +350,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             onClick={() => {
               try {
                 console.log('Link button clicked');
-                const url = window.prompt('Enter URL:');
-                if (url) {
-                  editor.chain().focus().setLink({ href: url }).run();
-                  console.log('Link command executed with URL:', url);
-                }
+                setShowLinkModal(true);
               } catch (error) {
                 console.warn('Link toggle error:', error);
               }
@@ -351,6 +364,21 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
           >
             <Link size={16} />
           </button>
-    </div>
+        </div>
+      )}
+
+      <LinkModal
+        isOpen={showLinkModal}
+        onClose={() => setShowLinkModal(false)}
+        onConfirm={(url) => {
+          try {
+            editor.chain().focus().setLink({ href: url }).run();
+            console.log('Link command executed with URL:', url);
+          } catch (error) {
+            console.warn('Link command error:', error);
+          }
+        }}
+      />
+    </>
   );
 }

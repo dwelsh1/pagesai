@@ -121,15 +121,16 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   }
 
   return (
-    <div
-      ref={toolbarRef}
-      className="fixed z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-1 flex items-center space-x-1"
-      style={{
-        top: position.top,
-        left: position.left,
-        width: '700px',
-      }}
-    >
+    <>
+      <div
+        ref={toolbarRef}
+        className="fixed z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-1 flex items-center space-x-1"
+        style={{
+          top: position.top,
+          left: position.left,
+          width: '700px',
+        }}
+      >
       {/* Formatting */}
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -298,6 +299,6 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       isOpen={imageModalOpen}
       onClose={() => setImageModalOpen(false)}
     />
-  </div>
-);
+    </>
+  );
 }

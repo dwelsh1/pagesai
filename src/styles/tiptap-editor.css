@@ -176,3 +176,12 @@
   margin: 0.25em 0 !important;
   display: list-item !important;
 }
+
+/* Blockquote styles */
+.tiptap-editor .ProseMirror blockquote {
+  margin: 0.5em 0 !important;
+  padding-left: 1em !important;
+  border-left: 3px solid #ccc !important;
+  font-style: italic !important;
+  color: #666 !important;
+}

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Code, Underline, Type, List, ListOrdered } from 'lucide-react';
+import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote } from 'lucide-react';
 
 interface FloatingToolbarProps {
   editor: Editor;
@@ -41,13 +41,13 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const start = editor.view.coordsAtPos(from);
       const end = editor.view.coordsAtPos(to);
 
-      // Calculate position for the toolbar - simplified approach
-      const toolbarHeight = 40;
-      const toolbarWidth = 120;
-      
-      // Use simpler positioning - just above the selection
-      const top = Math.max(0, start.top - toolbarHeight - 8);
-      const left = Math.max(0, (start.left + end.left) / 2 - toolbarWidth / 2);
+          // Calculate position for the toolbar - simplified approach
+          const toolbarHeight = 40;
+          const toolbarWidth = 120;
+          
+          // Use simpler positioning - raise it higher above the selection
+          const top = Math.max(0, start.top - toolbarHeight - 16);
+          const left = Math.max(0, (start.left + end.left) / 2 - toolbarWidth / 2);
 
       console.log('Start coords:', start);
       console.log('End coords:', end);
@@ -303,6 +303,28 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             title="Numbered List"
           >
             <ListOrdered size={16} />
+          </button>
+
+          <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('Blockquote button clicked');
+                editor.chain().focus().toggleBlockquote().run();
+                console.log('Blockquote command executed');
+              } catch (error) {
+                console.warn('Blockquote toggle error:', error);
+              }
+            }}
+            className={`p-2 rounded-md transition-colors duration-200 ${
+              editor.isActive('blockquote') 
+                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+            }`}
+            title="Quote (Blockquote)"
+          >
+            <Quote size={16} />
           </button>
     </div>
   );

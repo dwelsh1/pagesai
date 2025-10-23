@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
 import { SlashCommand } from '@/lib/slash-command-extension';
 import { SlashCommandMenu } from './slash-command-menu';
+import { FloatingToolbar } from './floating-toolbar';
 import '@/styles/tiptap-editor.css';
 
 interface TipTapEditorProps {
@@ -208,6 +209,8 @@ export function TipTapEditor({
           style={{ background: 'transparent', border: 'none', outline: 'none' }}
         />
       </div>
+      
+      <FloatingToolbar editor={editor} />
       
       <SlashCommandMenu
         editor={editor}

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote, Link } from 'lucide-react';
+import { Bold, Italic, Code, Underline, Type, List, ListOrdered, Quote, Link, Image } from 'lucide-react';
 import { LinkModal } from './link-modal';
 
 interface FloatingToolbarProps {
@@ -364,6 +364,25 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
             title="Add Link"
           >
             <Link size={16} />
+          </button>
+
+          <button
+            onClick={() => {
+              try {
+                console.log('Image button clicked');
+                const url = window.prompt('Enter image URL:');
+                if (url) {
+                  editor.chain().focus().setImage({ src: url }).run();
+                  console.log('Image command executed with URL:', url);
+                }
+              } catch (error) {
+                console.warn('Image toggle error:', error);
+              }
+            }}
+            className="p-2 rounded-md transition-colors duration-200 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+            title="Add Image"
+          >
+            <Image size={16} />
           </button>
         </div>
 

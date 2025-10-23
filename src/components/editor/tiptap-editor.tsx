@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Heading from '@tiptap/extension-heading';
 import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
 import { useCallback, useEffect } from 'react';
 import { blockNoteToHtml } from '@/lib/blocknote-to-html';
 import { FloatingToolbar } from './floating-toolbar';
@@ -96,6 +97,11 @@ export function TipTapEditor({
             openOnClick: false,
             HTMLAttributes: {
               class: 'text-blue-600 underline',
+            },
+          }),
+          Image.configure({
+            HTMLAttributes: {
+              class: 'max-w-full h-auto rounded-lg',
             },
           }),
         ],

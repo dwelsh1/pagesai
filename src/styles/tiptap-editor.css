@@ -196,3 +196,12 @@
 .tiptap-editor .ProseMirror a:hover {
   color: #1d4ed8 !important;
 }
+
+/* Image styles */
+.tiptap-editor .ProseMirror img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 0.5rem !important;
+  margin: 0.5em 0 !important;
+  display: block !important;
+}

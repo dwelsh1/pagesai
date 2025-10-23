@@ -51,7 +51,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       const viewportHeight = window.innerHeight;
       
       // Fixed toolbar width to ensure all buttons fit
-      const toolbarWidth = 520; // Fixed width to accommodate all 18 buttons
+      const toolbarWidth = 580; // Increased width to accommodate all 18 buttons with padding
       
       // Calculate center position of selection
       const selectionCenter = (start.left + end.left) / 2;
@@ -468,18 +468,31 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
               onClick={() => {
                 try {
                   console.log('Justify button clicked');
-                  console.log('Editor commands available:', editor.commands);
-                  console.log('TextAlign extension loaded:', editor.extensionManager.extensions.find(ext => ext.name === 'textAlign'));
                   
-                  const result = editor.chain().focus().setTextAlign('justify').run();
-                  console.log('Justify command result:', result);
-                  console.log('Editor active state:', editor.isActive({ textAlign: 'justify' }));
+                  // Try multiple approaches to apply justify alignment
+                  console.log('Trying setTextAlign justify...');
+                  const result1 = editor.chain().focus().setTextAlign('justify').run();
+                  console.log('setTextAlign result:', result1);
                   
-                  // Force update to see if alignment changed
-                  setTimeout(() => {
-                    console.log('After timeout - active state:', editor.isActive({ textAlign: 'justify' }));
-                    console.log('Current HTML:', editor.getHTML());
-                  }, 100);
+                  // Try alternative approach
+                  console.log('Trying alternative justify approach...');
+                  const result2 = editor.commands.setTextAlign('justify');
+                  console.log('Alternative result:', result2);
+                  
+                  // Check if any alignment is active
+                  console.log('Left active:', editor.isActive({ textAlign: 'left' }));
+                  console.log('Center active:', editor.isActive({ textAlign: 'center' }));
+                  console.log('Right active:', editor.isActive({ textAlign: 'right' }));
+                  console.log('Justify active:', editor.isActive({ textAlign: 'justify' }));
+                  
+                  // Get current selection and HTML
+                  const { from, to } = editor.state.selection;
+                  console.log('Selection from:', from, 'to:', to);
+                  console.log('Current HTML:', editor.getHTML());
+                  
+                  // Force update
+                  editor.view.updateState(editor.state);
+                  
                 } catch (error) {
                   console.warn('Text align justify error:', error);
                 }

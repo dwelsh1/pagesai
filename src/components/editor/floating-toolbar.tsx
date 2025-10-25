@@ -157,9 +157,9 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
       </button>
       
       <button
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('code') ? 'bg-gray-200' : ''}`}
-        title="Code"
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        className={`p-2 rounded hover:bg-gray-100 ${editor.isActive('codeBlock') ? 'bg-gray-200' : ''}`}
+        title="Code Block"
       >
         <Code className="w-4 h-4" />
       </button>

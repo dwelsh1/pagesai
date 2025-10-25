@@ -13,6 +13,8 @@ import { blockNoteToHtml } from '@/lib/blocknote-to-html';
 import { SlashCommand } from '@/lib/slash-command-extension';
 import { SlashCommandMenu } from './slash-command-menu';
 import { FloatingToolbar } from './floating-toolbar';
+import { ImageModal } from './image-modal';
+import { LinkModal } from './link-modal';
 import '@/styles/tiptap-editor.css';
 
 interface TipTapEditorProps {
@@ -38,6 +40,10 @@ export function TipTapEditor({
   const [slashCommandOpen, setSlashCommandOpen] = useState(false);
   const [slashCommandPosition, setSlashCommandPosition] = useState({ top: 0, left: 0 });
   const editorRef = useRef<HTMLDivElement>(null);
+
+  // Modal states
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -146,7 +152,17 @@ export function TipTapEditor({
   useEffect(() => {
     const handleSlashCommand = (event: CustomEvent) => {
       console.log('🎯 Slash command event received:', event.detail);
-      if (!editorRef.current) return;
+      console.log('🎯 Editor state:', { 
+        editor: !!editor, 
+        editorRef: !!editorRef.current,
+        editorFocused: editor?.isFocused,
+        editorSelection: editor?.state.selection
+      });
+      
+      if (!editorRef.current) {
+        console.log('🎯 EditorRef not available, returning');
+        return;
+      }
       
       const rect = editorRef.current.getBoundingClientRect();
       const position = {
@@ -160,10 +176,26 @@ export function TipTapEditor({
       console.log('🎯 Slash command menu opened');
     };
 
+    const handleOpenImageModal = (event: CustomEvent) => {
+      console.log('🎯 Open image modal event received:', event.detail);
+      setImageModalOpen(true);
+    };
+
+    const handleOpenLinkModal = (event: CustomEvent) => {
+      console.log('🎯 Open link modal event received:', event.detail);
+      console.log('🎯 Link modal state before:', { linkModalOpen });
+      setLinkModalOpen(true);
+      console.log('🎯 Link modal state after:', { linkModalOpen: true });
+    };
+
     window.addEventListener('slashCommand', handleSlashCommand as EventListener);
+    window.addEventListener('openImageModal', handleOpenImageModal as EventListener);
+    window.addEventListener('openLinkModal', handleOpenLinkModal as EventListener);
     
     return () => {
       window.removeEventListener('slashCommand', handleSlashCommand as EventListener);
+      window.removeEventListener('openImageModal', handleOpenImageModal as EventListener);
+      window.removeEventListener('openLinkModal', handleOpenLinkModal as EventListener);
     };
   }, []);
 
@@ -220,6 +252,18 @@ export function TipTapEditor({
         isOpen={slashCommandOpen}
         onClose={handleSlashCommandClose}
         position={slashCommandPosition}
+      />
+      
+      <ImageModal
+        editor={editor}
+        isOpen={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+      />
+      
+      <LinkModal
+        editor={editor}
+        isOpen={linkModalOpen}
+        onClose={() => setLinkModalOpen(false)}
       />
     </>
   );

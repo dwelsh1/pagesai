@@ -49,13 +49,20 @@ export const slashCommands: SlashCommand[] = [
   },
   {
     title: 'Code',
-    description: 'Make text inline code',
+    description: 'Create a code block',
     icon: Code,
     command: (editor) => {
-      editor.chain().focus().toggleCode().insertContent('code').run();
+      editor.chain().focus().toggleCodeBlock().run();
+      // Insert placeholder text after the code block is created
+      setTimeout(() => {
+        editor.commands.insertContent('code');
+        // Select just the placeholder text, not all content
+        const { from, to } = editor.state.selection;
+        editor.commands.setTextSelection({ from: from - 4, to: to });
+      }, 10);
     },
-    keywords: ['code', 'inline', 'monospace'],
-    category: 'formatting'
+    keywords: ['code', 'block', 'monospace', 'pre'],
+    category: 'structure'
   },
   
   // Structure
@@ -64,7 +71,13 @@ export const slashCommands: SlashCommand[] = [
     description: 'Large heading',
     icon: Heading1,
     command: (editor) => {
-      editor.chain().focus().toggleHeading({ level: 1 }).insertContent('Heading 1').run();
+      // Insert heading with placeholder text in one operation
+      editor.chain().focus().setHeading({ level: 1 }).insertContent('Heading 1').run();
+      // Select the placeholder text so it can be replaced
+      setTimeout(() => {
+        const { from, to } = editor.state.selection;
+        editor.commands.setTextSelection({ from: from - 9, to: to });
+      }, 10);
     },
     keywords: ['h1', 'heading1', 'title', 'large'],
     category: 'structure'
@@ -74,7 +87,13 @@ export const slashCommands: SlashCommand[] = [
     description: 'Medium heading',
     icon: Heading2,
     command: (editor) => {
-      editor.chain().focus().toggleHeading({ level: 2 }).insertContent('Heading 2').run();
+      // Insert heading with placeholder text in one operation
+      editor.chain().focus().setHeading({ level: 2 }).insertContent('Heading 2').run();
+      // Select the placeholder text so it can be replaced
+      setTimeout(() => {
+        const { from, to } = editor.state.selection;
+        editor.commands.setTextSelection({ from: from - 9, to: to });
+      }, 10);
     },
     keywords: ['h2', 'heading2', 'subtitle', 'medium'],
     category: 'structure'
@@ -84,7 +103,13 @@ export const slashCommands: SlashCommand[] = [
     description: 'Small heading',
     icon: Heading3,
     command: (editor) => {
-      editor.chain().focus().toggleHeading({ level: 3 }).insertContent('Heading 3').run();
+      // Insert heading with placeholder text in one operation
+      editor.chain().focus().setHeading({ level: 3 }).insertContent('Heading 3').run();
+      // Select the placeholder text so it can be replaced
+      setTimeout(() => {
+        const { from, to } = editor.state.selection;
+        editor.commands.setTextSelection({ from: from - 9, to: to });
+      }, 10);
     },
     keywords: ['h3', 'heading3', 'small'],
     category: 'structure'
@@ -94,7 +119,12 @@ export const slashCommands: SlashCommand[] = [
     description: 'Normal text',
     icon: Type,
     command: (editor) => {
-      editor.chain().focus().setParagraph().insertContent('Type something...').run();
+      editor.chain().focus().setParagraph().run();
+      // Insert placeholder text after the paragraph is created
+      setTimeout(() => {
+        editor.commands.insertContent('Type something...');
+        editor.commands.selectAll();
+      }, 10);
     },
     keywords: ['paragraph', 'normal', 'text', 'p'],
     category: 'structure'
@@ -104,7 +134,12 @@ export const slashCommands: SlashCommand[] = [
     description: 'Create a bullet list',
     icon: List,
     command: (editor) => {
-      editor.chain().focus().toggleBulletList().insertContent('List item').run();
+      editor.chain().focus().toggleBulletList().run();
+      // Insert placeholder text after the list is created
+      setTimeout(() => {
+        editor.commands.insertContent('List item');
+        editor.commands.selectAll();
+      }, 10);
     },
     keywords: ['bullet', 'list', 'ul', 'unordered'],
     category: 'structure'
@@ -114,7 +149,12 @@ export const slashCommands: SlashCommand[] = [
     description: 'Create a numbered list',
     icon: ListOrdered,
     command: (editor) => {
-      editor.chain().focus().toggleOrderedList().insertContent('List item').run();
+      editor.chain().focus().toggleOrderedList().run();
+      // Insert placeholder text after the list is created
+      setTimeout(() => {
+        editor.commands.insertContent('List item');
+        editor.commands.selectAll();
+      }, 10);
     },
     keywords: ['numbered', 'ordered', 'ol', 'list'],
     category: 'structure'
@@ -124,7 +164,12 @@ export const slashCommands: SlashCommand[] = [
     description: 'Create a blockquote',
     icon: Quote,
     command: (editor) => {
-      editor.chain().focus().toggleBlockquote().insertContent('Quote').run();
+      editor.chain().focus().toggleBlockquote().run();
+      // Insert placeholder text after the quote is created
+      setTimeout(() => {
+        editor.commands.insertContent('Quote');
+        editor.commands.selectAll();
+      }, 10);
     },
     keywords: ['quote', 'blockquote', 'citation'],
     category: 'structure'
@@ -170,10 +215,19 @@ export const slashCommands: SlashCommand[] = [
     description: 'Add a link',
     icon: Link,
     command: (editor) => {
-      const url = window.prompt('Enter URL:');
-      if (url) {
-        editor.chain().focus().setLink({ href: url }).run();
-      }
+      console.log('🔗 LINK COMMAND EXECUTED');
+      console.log('🔗 Editor state:', {
+        hasFocus: editor.isFocused,
+        selection: editor.state.selection,
+        content: editor.getHTML()
+      });
+      
+      // Trigger the link modal by dispatching a custom event
+      const customEvent = new CustomEvent('openLinkModal', {
+        detail: { editor }
+      });
+      console.log('🔗 Dispatching openLinkModal event:', customEvent);
+      window.dispatchEvent(customEvent);
     },
     keywords: ['link', 'url', 'href', 'a'],
     category: 'media'
@@ -183,10 +237,11 @@ export const slashCommands: SlashCommand[] = [
     description: 'Add an image',
     icon: Image,
     command: (editor) => {
-      const url = window.prompt('Enter image URL:');
-      if (url) {
-        editor.chain().focus().setImage({ src: url }).run();
-      }
+      // Trigger the image modal by dispatching a custom event
+      const customEvent = new CustomEvent('openImageModal', {
+        detail: { editor }
+      });
+      window.dispatchEvent(customEvent);
     },
     keywords: ['image', 'img', 'picture', 'photo'],
     category: 'media'

@@ -25,11 +25,11 @@ export function LinkModal({ editor, isOpen, onClose }: LinkModalProps) {
       
       const displayText = linkText.trim() || selectedText || url.trim();
       
-      if (selectedText) {
-        // Replace selected text with link
+      if (selectedText && !linkText.trim()) {
+        // Replace selected text with link (only if no custom text provided)
         editor.chain().focus().setLink({ href: url.trim() }).run();
       } else {
-        // Insert link with custom text
+        // Insert link with custom text (either from linkText field or selected text)
         editor.chain().focus().insertContent(`<a href="${url.trim()}">${displayText}</a>`).run();
       }
     }

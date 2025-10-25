@@ -69,6 +69,22 @@
   font-weight: bold !important;
 }
 
+/* Proper heading sizes */
+.tiptap-editor .ProseMirror h1 {
+  font-size: 2em !important;
+  line-height: 1.2 !important;
+}
+
+.tiptap-editor .ProseMirror h2 {
+  font-size: 1.5em !important;
+  line-height: 1.3 !important;
+}
+
+.tiptap-editor .ProseMirror h3 {
+  font-size: 1.25em !important;
+  line-height: 1.4 !important;
+}
+
 .tiptap-editor .ProseMirror p {
   margin: 0.5em 0 !important;
 }
@@ -131,4 +147,31 @@
   font-family: monospace;
   color: #6b7280;
   font-size: 0.875rem;
+}
+
+/* Placeholder text styling - Notion-like */
+.tiptap-editor .ProseMirror .placeholder {
+  color: #9ca3af !important;
+  font-style: italic !important;
+  pointer-events: none !important;
+}
+
+/* Selected placeholder text */
+.tiptap-editor .ProseMirror .placeholder.selected {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+}
+
+/* Style selected text to look like placeholder when it's the default text */
+.tiptap-editor .ProseMirror ::selection {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+}
+
+/* Make selected text look like placeholder when it contains default heading text */
+.tiptap-editor .ProseMirror h1:has-text("Heading 1") ::selection,
+.tiptap-editor .ProseMirror h2:has-text("Heading 2") ::selection,
+.tiptap-editor .ProseMirror h3:has-text("Heading 3") ::selection {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
 }

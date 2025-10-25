@@ -49,8 +49,16 @@ export function Sidebar({
     ? pathname.split('/dashboard/page/')[1]?.split('/')[0]
     : null;
 
+  // Get current page name
+  const currentPageName = currentPageId 
+    ? fetchedPages.find(page => page.id === currentPageId)?.title || 'Unknown Page'
+    : null;
+
   console.log('📱 Sidebar: Current pathname:', pathname);
   console.log('📱 Sidebar: Current pageId:', currentPageId);
+  if (currentPageName) {
+    console.log('📱 Sidebar: Current pageName:', currentPageName);
+  }
 
   // Fetch pages from API
   useEffect(() => {

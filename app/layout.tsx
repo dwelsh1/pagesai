@@ -9,11 +9,11 @@ export const metadata: Metadata = {
   description: 'A modern web application built with Next.js 15 and React 19',
   icons: {
     icon: [
-      { url: '/favicon.ico?v=3', sizes: 'any' },
-      { url: '/favicon.svg?v=3', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
-    shortcut: '/favicon.ico?v=3',
-    apple: '/favicon.ico?v=3',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
 };
 

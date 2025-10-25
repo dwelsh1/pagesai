@@ -71,42 +71,56 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, selectedIndex, filteredCommands, onClose]);
 
-  const executeCommand = (command: SlashCommand) => {
-    console.log('🎯 EXECUTE COMMAND CALLED:', command.title);
-    console.log('🎯 Editor state before command:', {
-      hasFocus: editor.isFocused,
-      selection: editor.state.selection,
-      content: editor.getHTML()
-    });
-    
-    // Execute the command directly
-    command.command(editor);
-    
-    console.log('🎯 Editor state after command:', {
-      hasFocus: editor.isFocused,
-      selection: editor.state.selection,
-      content: editor.getHTML()
-    });
-    
-    // Ensure editor maintains focus and cursor is visible
-    setTimeout(() => {
-      console.log('🎯 Attempting to restore focus...');
-      editor.commands.focus();
-      console.log('🎯 Editor state after focus:', {
-        hasFocus: editor.isFocused,
-        selection: editor.state.selection
-      });
-      
-      // Force a re-render to ensure cursor is visible
-      editor.view.updateState(editor.view.state);
-      console.log('🎯 Editor state after updateState:', {
-        hasFocus: editor.isFocused,
-        selection: editor.state.selection
-      });
-    }, 50);
-    
-    onClose();
-  };
+      const executeCommand = (command: SlashCommand) => {
+        console.log('🎯 EXECUTE COMMAND CALLED:', command.title);
+        console.log('🎯 Command details:', {
+          title: command.title,
+          category: command.category,
+          keywords: command.keywords
+        });
+        console.log('🎯 Editor state before command:', {
+          hasFocus: editor.isFocused,
+          selection: editor.state.selection,
+          content: editor.getHTML()
+        });
+        
+        // Execute the command immediately without closing menu first
+        try {
+          // Execute the command directly
+          command.command(editor);
+          
+          console.log('🎯 Editor state after command:', {
+            hasFocus: editor.isFocused,
+            selection: editor.state.selection,
+            content: editor.getHTML()
+          });
+          
+          // Close the menu after command execution
+          onClose();
+          
+          // Ensure editor maintains focus and cursor is visible
+          setTimeout(() => {
+            console.log('🎯 Attempting to restore focus...');
+            editor.commands.focus();
+            
+            // Force cursor to be visible
+            const { view } = editor;
+            if (view && view.dom) {
+              view.dom.focus();
+            }
+            
+            console.log('🎯 Editor state after focus:', {
+              hasFocus: editor.isFocused,
+              selection: editor.state.selection
+            });
+          }, 10);
+        } catch (error) {
+          console.error('🎯 Error executing command:', error);
+          // Fallback: just focus the editor
+          editor.commands.focus();
+          onClose();
+        }
+      };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -137,7 +151,12 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
 
   if (!isOpen) return null;
 
-  console.log('🎯 SlashCommandMenu rendering:', { isOpen, filteredCommands: filteredCommands.length });
+      console.log('🎯 SlashCommandMenu rendering:', { 
+        isOpen, 
+        filteredCommands: filteredCommands.length,
+        position,
+        editor: !!editor
+      });
 
   return (
     <div
@@ -188,12 +207,13 @@ export function SlashCommandMenu({ editor, isOpen, onClose, position }: SlashCom
                     className={`px-3 py-2 cursor-pointer border-b border-gray-50 last:border-b-0 ${
                       isSelected ? 'bg-blue-50' : 'hover:bg-gray-50'
                     }`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      console.log('🎯 Command clicked:', command.title);
-                      executeCommand(command);
-                    }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('🎯 Command clicked:', command.title);
+                          console.log('🎯 Command object:', command);
+                          executeCommand(command);
+                        }}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();

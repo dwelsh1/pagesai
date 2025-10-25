@@ -50,23 +50,33 @@ export function ImageModal({ editor, isOpen, onClose }: ImageModalProps) {
       let imageSrc = '';
 
       if (selectedFile) {
-        // Convert file to data URL
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          imageSrc = e.target?.result as string;
-          editor.chain().focus().setImage({ src: imageSrc }).run();
-          onClose();
-          setIsUploading(false);
-        };
-        reader.readAsDataURL(selectedFile);
+        // Upload file to server
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        
+        const response = await fetch('/api/upload/image', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to upload image');
+        }
+        
+        const result = await response.json();
+        imageSrc = result.imageUrl;
       } else if (url) {
         // Use URL directly
-        editor.chain().focus().setImage({ src: url }).run();
-        onClose();
-        setIsUploading(false);
+        imageSrc = url;
       }
+
+      // Insert image into editor
+      editor.chain().focus().setImage({ src: imageSrc }).run();
+      onClose();
     } catch (error) {
       console.error('Error inserting image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
       setIsUploading(false);
     }
   };

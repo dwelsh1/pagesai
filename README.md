@@ -13,7 +13,9 @@ A modern web application built with Next.js 15, React 19, TypeScript, and a comp
 ## 🚀 Features
 
 - **Modern Authentication**: JWT-based authentication with secure password hashing
-- **TipTap Rich Text Editor**: Live editing with auto-save and clean, borderless UI
+- **TipTap Rich Text Editor**: Live editing with auto-save, floating toolbar, and slash commands
+- **Slash Commands**: Notion-like slash command system with 20+ commands across 5 categories
+- **Image Management**: File upload system with persistent storage in `/public/uploads/`
 - **Real-time Search**: Full-text search across pages with dropdown results
 - **System Diagnostics**: Comprehensive monitoring with console log capture
 - **Responsive Design**: Clean, minimalist UI built with Tailwind CSS
@@ -81,6 +83,55 @@ npm run db:seed
 npm run dev
 # Open http://localhost:3000
 ```
+
+## 📁 Image Storage
+
+PagesAI includes a comprehensive image management system that stores uploaded images as files rather than embedding them in the database.
+
+### Storage Location
+
+**Local Development**: `D:\gitrepos\pagesai\public\uploads\`
+
+**Directory Structure**:
+```
+public/
+├── uploads/              ← Images stored here
+│   ├── 1737123456789-abc123def456.jpg
+│   ├── 1737123456790-xyz789ghi012.png
+│   └── ...
+├── favicon.ico
+└── ...
+```
+
+### Image Upload Process
+
+1. **File Selection**: Users can browse and select image files
+2. **Server Upload**: Files are uploaded to `/api/upload/image`
+3. **File Storage**: Images saved to `/public/uploads/` with unique names
+4. **URL Generation**: Images accessible via `/uploads/filename.ext`
+5. **Editor Integration**: Images inserted into TipTap editor with proper URLs
+
+### File Naming Convention
+
+- **Pattern**: `{timestamp}-{randomString}.{extension}`
+- **Example**: `1737123456789-abc123def456.jpg`
+- **Timestamp**: Current time in milliseconds
+- **Random String**: 13-character random string for uniqueness
+- **Extension**: Original file extension (jpg, png, gif, etc.)
+
+### Access Methods
+
+- **Local Development**: `http://localhost:3001/uploads/filename.jpg`
+- **Production**: `https://yourdomain.com/uploads/filename.jpg`
+- **File System**: Direct access via `public/uploads/` directory
+
+### Benefits
+
+- **Performance**: Images served as static assets (faster than database storage)
+- **Scalability**: No database size limits for image content
+- **Persistence**: Images remain available across page navigation
+- **Efficiency**: No base64 encoding overhead
+- **Caching**: Browser caching for improved performance
 
 ## 📦 Installation
 
@@ -252,6 +303,8 @@ pagesai/
 ├── app/                          # Next.js 15 App Router
 │   ├── api/                      # API routes
 │   │   ├── auth/                 # Authentication endpoints
+│   │   ├── upload/               # File upload endpoints
+│   │   │   └── image/             # Image upload endpoint
 │   │   └── openapi.json/         # OpenAPI specification endpoint
 │   ├── docs/                     # API documentation page
 │   ├── (auth)/                   # Auth route group
@@ -259,6 +312,10 @@ pagesai/
 │   ├── globals.css               # Global styles with Tailwind
 │   ├── layout.tsx                # Root layout
 │   └── page.tsx                  # Home page
+├── public/                       # Static assets
+│   ├── uploads/                  # Image uploads storage
+│   ├── favicon.ico               # Site favicon
+│   └── robots.txt                # SEO robots file
 ├── prisma/                       # Database schema and migrations
 │   ├── schema.prisma             # Database schema
 │   ├── seed.ts                   # Database seeding script
@@ -266,7 +323,8 @@ pagesai/
 ├── src/                          # Source code
 │   ├── components/               # Reusable components
 │   │   ├── ui/                   # shadcn/ui components
-│   │   └── auth/                 # Auth-specific components
+│   │   ├── auth/                 # Auth-specific components
+│   │   └── editor/               # TipTap editor components
 │   ├── lib/                      # Utilities and configurations
 │   │   ├── auth.ts               # Authentication utilities
 │   │   ├── db.ts                 # Database connection

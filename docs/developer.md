@@ -9,16 +9,17 @@ This comprehensive guide is designed for junior developers to understand and wor
 3. [Development Environment](#development-environment)
 4. [Code Organization](#code-organization)
 5. [Authentication System](#authentication-system)
-6. [Database & Prisma](#database--prisma)
-7. [UI Components & Styling](#ui-components--styling)
-8. [API Routes](#api-routes)
-9. [API Documentation](#api-documentation)
-10. [Code Quality & Formatting](#code-quality--formatting)
-11. [Testing Strategy](#testing-strategy)
-12. [Common Tasks](#common-tasks)
-13. [Debugging Guide](#debugging-guide)
-14. [Best Practices](#best-practices)
-15. [Troubleshooting](#troubleshooting)
+6. [Image Management System](#image-management-system)
+7. [Database & Prisma](#database--prisma)
+8. [UI Components & Styling](#ui-components--styling)
+9. [API Routes](#api-routes)
+10. [API Documentation](#api-documentation)
+11. [Code Quality & Formatting](#code-quality--formatting)
+12. [Testing Strategy](#testing-strategy)
+13. [Common Tasks](#common-tasks)
+14. [Debugging Guide](#debugging-guide)
+15. [Best Practices](#best-practices)
+16. [Troubleshooting](#troubleshooting)
 
 ## 🎯 Project Overview
 
@@ -49,6 +50,8 @@ app/
 │   └── login/           # Login page at /login
 ├── api/                 # API routes
 │   ├── auth/            # Authentication endpoints
+│   ├── upload/          # File upload endpoints
+│   │   └── image/       # Image upload endpoint
 │   └── openapi.json/    # OpenAPI specification endpoint
 ├── docs/                # API documentation page
 ├── globals.css          # Global styles
@@ -62,7 +65,8 @@ app/
 src/
 ├── components/
 │   ├── ui/              # Reusable UI components (shadcn/ui)
-│   └── auth/            # Authentication-specific components
+│   ├── auth/            # Authentication-specific components
+│   └── editor/          # TipTap editor components
 ├── lib/                 # Utilities and configurations
 │   ├── auth.ts          # JWT and session management
 │   ├── db.ts            # Database connection
@@ -74,6 +78,17 @@ src/
 │   └── utils.ts         # General utilities
 └── server/              # Server-side utilities
     └── auth.ts          # Server authentication helpers
+```
+
+### Static Assets Structure
+
+```
+public/
+├── uploads/             # Image uploads storage
+├── favicon.ico         # Site favicon
+├── favicon.svg         # SVG favicon
+├── icon.svg            # App icon
+└── robots.txt          # SEO robots file
 ```
 
 ### Data Flow Pattern
@@ -279,6 +294,130 @@ export async function getUser() {
   });
 }
 ```
+
+## 🖼️ Image Management System
+
+### Image Storage Architecture
+
+PagesAI uses a file-based image storage system that saves uploaded images as files in the `public/uploads/` directory rather than storing them as base64 data in the database.
+
+#### Storage Location
+
+**Development**: `D:\gitrepos\pagesai\public\uploads\`
+
+**Directory Structure**:
+```
+public/
+├── uploads/              ← Images stored here
+│   ├── 1737123456789-abc123def456.jpg
+│   ├── 1737123456790-xyz789ghi012.png
+│   └── ...
+├── favicon.ico
+└── ...
+```
+
+#### Upload API Endpoint
+
+```typescript
+// app/api/upload/image/route.ts
+export async function POST(request: NextRequest) {
+  try {
+    const formData = await request.formData();
+    const file = formData.get('image') as File;
+    
+    // Validate file type and size
+    if (!file.type.startsWith('image/')) {
+      return NextResponse.json({ error: 'File must be an image' }, { status: 400 });
+    }
+    
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      return NextResponse.json({ error: 'File size must be less than 5MB' }, { status: 400 });
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 15);
+    const extension = file.name.split('.').pop();
+    const filename = `${timestamp}-${randomString}.${extension}`;
+    
+    // Save file to uploads directory
+    const uploadsDir = join(process.cwd(), 'public', 'uploads');
+    const filePath = join(uploadsDir, filename);
+    const bytes = await file.arrayBuffer();
+    await writeFile(filePath, Buffer.from(bytes));
+
+    // Return public URL
+    const imageUrl = `/uploads/${filename}`;
+    return NextResponse.json({ success: true, imageUrl, filename });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
+  }
+}
+```
+
+#### Image Modal Component
+
+```typescript
+// src/components/editor/image-modal.tsx
+const handleSubmit = async () => {
+  if (selectedFile) {
+    // Upload file to server
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+    
+    const response = await fetch('/api/upload/image', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    const result = await response.json();
+    const imageSrc = result.imageUrl;
+    
+    // Insert image into editor
+    editor.chain().focus().setImage({ src: imageSrc }).run();
+  }
+};
+```
+
+#### File Naming Convention
+
+- **Pattern**: `{timestamp}-{randomString}.{extension}`
+- **Example**: `1737123456789-abc123def456.jpg`
+- **Timestamp**: Current time in milliseconds for uniqueness
+- **Random String**: 13-character random string for collision avoidance
+- **Extension**: Original file extension preserved
+
+#### Access Methods
+
+- **Local Development**: `http://localhost:3001/uploads/filename.jpg`
+- **Production**: `https://yourdomain.com/uploads/filename.jpg`
+- **File System**: Direct access via `public/uploads/` directory
+
+#### Benefits of File-Based Storage
+
+1. **Performance**: Images served as static assets (faster than database queries)
+2. **Scalability**: No database size limits for image content
+3. **Persistence**: Images remain available across page navigation
+4. **Efficiency**: No base64 encoding/decoding overhead
+5. **Caching**: Browser caching for improved performance
+6. **CDN Ready**: Easy to integrate with CDN services
+
+#### Integration with TipTap Editor
+
+```typescript
+// Images are inserted with proper URLs
+editor.chain().focus().setImage({ src: '/uploads/filename.jpg' }).run();
+
+// HTML output
+<img src="/uploads/filename.jpg" alt="" class="max-w-full h-auto rounded-lg">
+```
+
+#### Security Considerations
+
+- **File Type Validation**: Only image files accepted
+- **Size Limits**: 5MB maximum file size
+- **Unique Filenames**: Prevents filename collisions
+- **Public Directory**: Images accessible via HTTP (consider authentication for sensitive images)
 
 ## 🗄️ Database & Prisma
 

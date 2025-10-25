@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header } from './header';
 import { Sidebar } from './sidebar';
+import { DeleteConfirmModal } from '@/components/ui/delete-confirm-modal';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 
@@ -13,6 +14,9 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [pageToDelete, setPageToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
   const handleCreatePage = () => {
@@ -25,9 +29,43 @@ export function MainLayout({ children }: MainLayoutProps) {
     router.push(`/dashboard/page/${pageId}/edit`);
   };
 
-  const handleDeletePage = (pageId: string) => {
-    console.log('MainLayout: Deleting page:', pageId);
-    // TODO: Implement page deletion with confirmation
+  const handleDeletePage = (pageId: string, pageTitle: string) => {
+    console.log('MainLayout: Requesting to delete page:', pageId, pageTitle);
+    setPageToDelete({ id: pageId, title: pageTitle });
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!pageToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/pages/${pageToDelete.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete page');
+      }
+
+      // Close modal and redirect to dashboard
+      setShowDeleteModal(false);
+      setPageToDelete(null);
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Failed to delete page:', error);
+      alert('Failed to delete page. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setPageToDelete(null);
   };
 
   return (
@@ -84,6 +122,14 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
         </main>
       </div>
+
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        pageTitle={pageToDelete?.title || ''}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

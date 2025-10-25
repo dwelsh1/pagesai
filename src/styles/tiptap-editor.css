@@ -24,6 +24,7 @@
   color: inherit !important;
   box-shadow: none !important;
   border-radius: 0 !important;
+  white-space: pre-wrap !important;
 }
 
 .tiptap-editor .ProseMirror:focus {
@@ -68,6 +69,22 @@
   font-weight: bold !important;
 }
 
+/* Proper heading sizes */
+.tiptap-editor .ProseMirror h1 {
+  font-size: 2em !important;
+  line-height: 1.2 !important;
+}
+
+.tiptap-editor .ProseMirror h2 {
+  font-size: 1.5em !important;
+  line-height: 1.3 !important;
+}
+
+.tiptap-editor .ProseMirror h3 {
+  font-size: 1.25em !important;
+  line-height: 1.4 !important;
+}
+
 .tiptap-editor .ProseMirror p {
   margin: 0.5em 0 !important;
 }
@@ -107,147 +124,54 @@
   padding: 0 !important;
 }
 
-/* Ensure bold and italic formatting is visible */
-.tiptap-editor .ProseMirror strong,
-.tiptap-editor .ProseMirror b {
-  font-weight: bold !important;
+/* Ensure cursor is visible */
+.tiptap-editor .ProseMirror .ProseMirror-cursor {
+  display: inline-block;
+  width: 0;
+  height: 1.2em;
+  border-left: 2px solid #000;
+  margin-left: -2px;
+  animation: blink 1s infinite;
 }
 
-.tiptap-editor .ProseMirror em,
-.tiptap-editor .ProseMirror i {
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Slash command decoration */
+.slash-command-decoration {
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-family: monospace;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Placeholder text styling - Notion-like */
+.tiptap-editor .ProseMirror .placeholder {
+  color: #9ca3af !important;
   font-style: italic !important;
+  pointer-events: none !important;
 }
 
-.tiptap-editor .ProseMirror u {
-  text-decoration: underline !important;
+/* Selected placeholder text */
+.tiptap-editor .ProseMirror .placeholder.selected {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
 }
 
-/* Heading styles */
-.tiptap-editor .ProseMirror h1 {
-  font-size: 2em !important;
-  font-weight: bold !important;
-  margin: 0.67em 0 !important;
+/* Style selected text to look like placeholder when it's the default text */
+.tiptap-editor .ProseMirror ::selection {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
 }
 
-.tiptap-editor .ProseMirror h2 {
-  font-size: 1.5em !important;
-  font-weight: bold !important;
-  margin: 0.75em 0 !important;
-}
-
-.tiptap-editor .ProseMirror h3 {
-  font-size: 1.17em !important;
-  font-weight: bold !important;
-  margin: 0.83em 0 !important;
-}
-
-.tiptap-editor .ProseMirror h4 {
-  font-size: 1em !important;
-  font-weight: bold !important;
-  margin: 1.12em 0 !important;
-}
-
-.tiptap-editor .ProseMirror h5 {
-  font-size: 0.83em !important;
-  font-weight: bold !important;
-  margin: 1.5em 0 !important;
-}
-
-.tiptap-editor .ProseMirror h6 {
-  font-size: 0.75em !important;
-  font-weight: bold !important;
-  margin: 1.67em 0 !important;
-}
-
-/* List styles */
-.tiptap-editor .ProseMirror ul {
-  list-style-type: disc !important;
-  margin: 0.5em 0 !important;
-  padding-left: 1.5em !important;
-}
-
-.tiptap-editor .ProseMirror ol {
-  list-style-type: decimal !important;
-  margin: 0.5em 0 !important;
-  padding-left: 1.5em !important;
-}
-
-.tiptap-editor .ProseMirror li {
-  margin: 0.25em 0 !important;
-  display: list-item !important;
-}
-
-/* Blockquote styles */
-.tiptap-editor .ProseMirror blockquote {
-  margin: 0.5em 0 !important;
-  padding-left: 1em !important;
-  border-left: 3px solid #ccc !important;
-  font-style: italic !important;
-  color: #666 !important;
-}
-
-/* Link styles */
-.tiptap-editor .ProseMirror a {
-  color: #2563eb !important;
-  text-decoration: underline !important;
-  cursor: pointer !important;
-}
-
-.tiptap-editor .ProseMirror a:hover {
-  color: #1d4ed8 !important;
-}
-
-/* Image styles */
-.tiptap-editor .ProseMirror img {
-  max-width: 100% !important;
-  height: auto !important;
-  border-radius: 0.5rem !important;
-  margin: 0.5em 0 !important;
-  display: block !important;
-}
-
-/* Text alignment styles */
-.tiptap-editor .ProseMirror .has-focus {
-  outline: none !important;
-}
-
-.tiptap-editor .ProseMirror [style*="text-align: left"] {
-  text-align: left !important;
-}
-
-.tiptap-editor .ProseMirror [style*="text-align: center"] {
-  text-align: center !important;
-}
-
-.tiptap-editor .ProseMirror [style*="text-align: right"] {
-  text-align: right !important;
-}
-
-.tiptap-editor .ProseMirror [style*="text-align: justify"] {
-  text-align: justify !important;
-}
-
-/* Additional justify alignment support */
-.tiptap-editor .ProseMirror .text-align[style*="justify"],
-.tiptap-editor .ProseMirror p[style*="justify"],
-.tiptap-editor .ProseMirror h1[style*="justify"],
-.tiptap-editor .ProseMirror h2[style*="justify"],
-.tiptap-editor .ProseMirror h3[style*="justify"] {
-  text-align: justify !important;
-}
-
-/* Force justify alignment for any element with justify style */
-.tiptap-editor .ProseMirror *[style*="text-align: justify"] {
-  text-align: justify !important;
-}
-
-/* Additional fallback for justify */
-.tiptap-editor .ProseMirror p,
-.tiptap-editor .ProseMirror h1,
-.tiptap-editor .ProseMirror h2,
-.tiptap-editor .ProseMirror h3,
-.tiptap-editor .ProseMirror h4,
-.tiptap-editor .ProseMirror h5,
-.tiptap-editor .ProseMirror h6 {
-  text-align: inherit !important;
+/* Make selected text look like placeholder when it contains default heading text */
+.tiptap-editor .ProseMirror h1:has-text("Heading 1") ::selection,
+.tiptap-editor .ProseMirror h2:has-text("Heading 2") ::selection,
+.tiptap-editor .ProseMirror h3:has-text("Heading 3") ::selection {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
 }

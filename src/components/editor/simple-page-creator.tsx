@@ -67,6 +67,13 @@ export function SimplePageCreator({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-6">
       {/* Header */}
@@ -109,6 +116,7 @@ export function SimplePageCreator({
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Enter page title..."
               className="text-lg font-medium"
               autoFocus

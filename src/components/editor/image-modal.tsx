@@ -1,176 +1,195 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { X } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Editor } from '@tiptap/react';
+import { X, Upload, Link as LinkIcon } from 'lucide-react';
 
 interface ImageModalProps {
+  editor: Editor;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (url: string) => void;
 }
 
-export function ImageModal({ isOpen, onClose, onConfirm }: ImageModalProps) {
+export function ImageModal({ editor, isOpen, onClose }: ImageModalProps) {
   const [url, setUrl] = useState('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>('');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      setUrl(''); // Clear URL when modal opens
-      setImageFile(null); // Clear file when modal opens
-      setImagePreview(''); // Clear preview when modal opens
-      // Focus on the input field when the modal opens
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100); // Small delay to ensure modal is rendered
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-  // Cleanup preview URL when component unmounts or preview changes
-  useEffect(() => {
-    return () => {
-      if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-      }
-    };
-  }, [imagePreview]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
-      setImageFile(file);
+      setSelectedFile(file);
       setUrl(''); // Clear URL when file is selected
       
       // Create preview URL
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+      const preview = URL.createObjectURL(file);
+      setPreviewUrl(preview);
     }
   };
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
-    if (e.target.value) {
-      setImageFile(null); // Clear file when URL is entered
-      setImagePreview(''); // Clear preview when URL is entered
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(event.target.value);
+    if (event.target.value) {
+      setSelectedFile(null);
+      setPreviewUrl(null);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (imageFile) {
-      // Convert file to data URL for embedding
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string;
-        onConfirm(dataUrl);
-        onClose();
-      };
-      reader.readAsDataURL(imageFile);
-    } else if (url.trim()) {
-      onConfirm(url.trim());
+  const handleSubmit = async () => {
+    if (!url && !selectedFile) return;
+
+    setIsUploading(true);
+
+    try {
+      let imageSrc = '';
+
+      if (selectedFile) {
+        // Upload file to server
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        
+        const response = await fetch('/api/upload/image', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to upload image');
+        }
+        
+        const result = await response.json();
+        imageSrc = result.imageUrl;
+      } else if (url) {
+        // Use URL directly
+        imageSrc = url;
+      }
+
+      // Insert image into editor
+      editor.chain().focus().setImage({ src: imageSrc }).run();
       onClose();
+    } catch (error) {
+      console.error('Error inserting image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Escape') {
-      onClose();
+  const handleClose = () => {
+    setUrl('');
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
     }
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
-    >
-      <div 
-        className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4"
-        onKeyDown={handleKeyDown}
-      >
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Add Image</h2>
+          <h2 className="text-lg font-semibold">Insert Image</h2>
           <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-md"
-            type="button"
+            onClick={handleClose}
+            className="text-gray-400 hover:text-gray-600"
           >
-            <X size={20} />
+            <X className="w-5 h-5" />
           </button>
         </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="file">Choose Image File</Label>
-            <div className="flex gap-2">
-              <Input
+
+        <div className="space-y-4">
+          {/* File Upload Section */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Upload Image File
+            </label>
+            <div className="flex items-center space-x-2">
+              <input
                 ref={fileInputRef}
-                id="file"
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="flex-1"
+                className="hidden"
               />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                className="whitespace-nowrap"
+              <button
+                onClick={handleBrowseClick}
+                className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
               >
-                Browse
-              </Button>
+                <Upload className="w-4 h-4" />
+                <span>Browse Files</span>
+              </button>
+              {selectedFile && (
+                <span className="text-sm text-gray-600">
+                  {selectedFile.name}
+                </span>
+              )}
             </div>
           </div>
 
-          <div className="text-center text-sm text-gray-500">or</div>
-
-          <div className="space-y-2">
-            <Label htmlFor="url">Image URL</Label>
-            <Input
-              ref={inputRef}
-              id="url"
-              type="url"
-              placeholder="https://example.com/image.jpg"
-              value={url}
-              onChange={handleUrlChange}
-              className="w-full"
-            />
-          </div>
-
-          {imagePreview && (
-            <div className="space-y-2">
-              <Label>Preview</Label>
-              <div className="border rounded-lg p-2 bg-gray-50">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="max-w-full h-auto max-h-32 mx-auto rounded"
-                />
-              </div>
+          {/* Preview */}
+          {previewUrl && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Preview
+              </label>
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="max-w-full h-32 object-contain border border-gray-200 rounded"
+              />
             </div>
           )}
 
-          <div className="flex gap-2 justify-end">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={!url.trim() && !imageFile}>
-              Add Image
-            </Button>
+          {/* Divider */}
+          <div className="flex items-center">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <span className="px-3 text-sm text-gray-500">OR</span>
+            <div className="flex-1 border-t border-gray-300"></div>
           </div>
-        </form>
+
+          {/* URL Input Section */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Image URL
+            </label>
+            <div className="flex items-center space-x-2">
+              <LinkIcon className="w-4 h-4 text-gray-400" />
+              <input
+                type="url"
+                value={url}
+                onChange={handleUrlChange}
+                placeholder="https://example.com/image.jpg"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              onClick={handleClose}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={(!url && !selectedFile) || isUploading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isUploading ? 'Inserting...' : 'Insert Image'}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

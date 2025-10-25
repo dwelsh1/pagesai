@@ -7,6 +7,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Slash Commands System**: Complete Notion-like slash command implementation
+  - Interactive slash command menu with keyboard navigation (arrow keys, Enter, Escape)
+  - 20+ commands across 5 categories: Formatting, Structure, Alignment, Media, Utility
+  - Real-time command filtering and search
+  - Custom event system for modal integration
+  - Notion-like placeholder text behavior with greyed-out styling
+- **Enhanced Code Block Support**: Multi-line code blocks with proper styling
+  - Fixed `/Code` slash command to create code blocks instead of inline code
+  - Fixed floating toolbar Code button for multi-line support
+  - Proper placeholder text selection (not all page content)
+  - Monospace font and grey background styling
+
+### Fixed
+- **Slash Command Execution**: Resolved cursor disappearing and command execution issues
+  - Fixed click vs Enter behavior differences
+  - Proper event handling with preventDefault and stopPropagation
+  - Restored editor focus after command execution
+  - Fixed heading formatting (H1/H2/H3 now display correct sizes)
+- **Link and Image Modals**: Custom modal integration for slash commands
+  - `/link` command now opens custom Link modal instead of browser prompt
+  - `/image` command opens custom Image modal with file explorer
+  - Link modal includes "Link Text" field for custom display text
+  - Proper modal state management and event handling
+- **Floating Toolbar**: Complete restoration and enhancement
+  - Fixed toolbar positioning and layout issues
+  - All buttons now properly contained within toolbar
+  - Code button creates multi-line code blocks
+  - Proper active state highlighting for code blocks
+- **Image Persistence**: Fixed images disappearing after navigation
+  - Implemented server-side image upload system
+  - Images stored in `/public/uploads/` directory
+  - Proper file naming and URL generation
+  - Images persist across page navigation
+- **Favicon Management**: Restored PagesAI favicon
+  - Created custom `favicon.svg` and `favicon.ico` files
+  - Removed version query parameters from favicon URLs
+  - Proper favicon metadata configuration
+
+### Changed
+- **Editor Behavior**: Improved user experience with Notion-like interactions
+  - Placeholder text appears greyed-out and italic
+  - Selected placeholder text highlighted with blue background
+  - Immediate text replacement when typing
+  - Proper cursor positioning and focus management
+- **Modal System**: Enhanced modal integration and user experience
+  - Custom styled modals replace all browser native dialogs
+  - Consistent modal design across Link and Image modals
+  - Proper keyboard navigation and accessibility
+- **Project Structure**: Updated documentation to reflect new directories
+  - Added `public/uploads/` directory for image storage
+  - Added `app/api/upload/image/` endpoint documentation
+  - Updated all `.md` files with current project structure
+
+## [v0.4.0] - 2025-01-19
+
+### Added
+- **Complete TipTap Floating Toolbar Implementation**
+- 18 fully functional toolbar buttons with proper positioning
+- Text formatting: Bold, Italic, Underline, Code
+- Structure elements: Headings (H1-H3), Paragraph, Lists, Blockquote
+- Text alignment: Left, Center, Right, Justify (all working!)
+- Link and Image functionality with custom modals
+- File explorer support for image uploads
+- Custom styled modals replacing browser prompts
+- Responsive toolbar positioning for all screen sizes
+- Comprehensive CSS overrides for proper text alignment
+
+### Fixed
+- TextStyle import errors and duplicate extension warnings
+- Toolbar cut-off issues across all screen sizes
+- Floating toolbar positioning for all alignments
+- Proper bounds checking for all viewport sizes
+- Text alignment rendering issues
+
+### Changed
+- Replaced browser native prompts with styled custom modals
+- Enhanced editor functionality with rich text capabilities
+- Improved user experience with professional toolbar interface
+
 ## [0.3.0] - 2024-12-19
 
 ### Added

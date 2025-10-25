@@ -11,6 +11,8 @@ pagesai/
 ├── app/                          # Next.js 15 App Router
 │   ├── api/                      # API routes
 │   │   ├── auth/                 # Authentication endpoints
+│   │   ├── upload/               # File upload endpoints
+│   │   │   └── image/             # Image upload endpoint
 │   │   └── openapi.json/         # OpenAPI specification endpoint
 │   ├── docs/                     # API documentation page
 │   ├── (auth)/                   # Auth route group
@@ -18,6 +20,10 @@ pagesai/
 │   ├── globals.css               # Global styles with Tailwind
 │   ├── layout.tsx                # Root layout
 │   └── page.tsx                  # Home page
+├── public/                       # Static assets
+│   ├── uploads/                  # Image uploads storage
+│   ├── favicon.ico               # Site favicon
+│   └── robots.txt                # SEO robots file
 ├── prisma/                       # Database schema and migrations
 │   ├── schema.prisma             # Database schema
 │   └── migrations/               # Database migrations
@@ -25,6 +31,7 @@ pagesai/
 │   ├── components/               # Reusable components
 │   │   ├── ui/                   # shadcn/ui components
 │   │   ├── auth/                 # Auth-specific components
+│   │   ├── editor/               # TipTap editor components
 │   │   └── modals/               # Modal components
 │   ├── lib/                      # Utilities and configurations
 │   │   ├── auth.ts               # Authentication utilities
